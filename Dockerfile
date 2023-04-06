@@ -14,6 +14,11 @@ RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
     tee /etc/apt/sources.list.d/hashicorp.list
 RUN apt update && apt-get install terraform
 
+# Install aws cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" \
+     && unzip awscliv2.zip \
+     && ./aws/install
+
 RUN useradd app --create-home
 WORKDIR /home/app
 
