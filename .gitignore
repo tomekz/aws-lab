@@ -1,2 +1,7 @@
 .terraform.d
+.terraform
 .bash_history
+
+# aws SDK config files
+src/.aws
+.lesshst
