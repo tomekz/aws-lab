@@ -1,5 +1,6 @@
 .terraform.d
 .terraform
+.terraform.lock.hcl
 .bash_history
 
 # aws SDK config files
