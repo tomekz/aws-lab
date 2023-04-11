@@ -7,8 +7,11 @@ The goal of this repo is to create a sandbox environment for exploring and learn
   - [ ] install ansible
 - [X] setup terraform and configure it to use aws
 - [X] use s3 bucket to store terraform state
-- [ ] create VPC using terraform
-- [ ] create EC2 instance using terraform
+- [X] setup network resources using terraform
+  - [X] create VPC using
+  - [X] attach internet gateway to VPC
+  - [X] create public subnets
+- [ ] create EC2 instance 
 - [ ] setup Jenkins cluster on EC2 
 - [ ] setup Ansible to manage Jenkins cluster
 
@@ -56,3 +59,4 @@ depending on your region and bucket name you might need to change the `backend.t
 * run `terraform` commands
   - `terraform init`
   - `terraform plan`
+  - `terraform apply`
