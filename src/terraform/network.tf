@@ -27,3 +27,20 @@ resource "aws_subnet" "public_2" {
   availability_zone = element(data.aws_availability_zones.azs.names, 1)
   tags = local.tags
 }
+
+resource "aws_route_table" "internet_route" {
+  vpc_id   = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  lifecycle {
+    ignore_changes = all
+  }
+  tags = local.tags
+}
+
+resource "aws_main_route_table_association" "set-master-default-rt-assoc" {
+  vpc_id         = aws_vpc.main.id
+  route_table_id = aws_route_table.internet_route.id
+}
