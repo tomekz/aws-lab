@@ -12,6 +12,7 @@ The goal of this repo is to create a sandbox environment for exploring and learn
   - [X] attach internet gateway to VPC
   - [X] create public subnets
 - [ ] create EC2 instance 
+  - [ ] generate ssh key pair for EC2 remote access
 - [ ] setup Jenkins cluster on EC2 
 - [ ] setup Ansible to manage Jenkins cluster
 
@@ -55,6 +56,10 @@ aws s3api create-bucket --bucket <your bucket name> --region <your region name> 
 depending on your region and bucket name you might need to change the `backend.tf` file
 
 ```bash
+* generate ssh key pair for EC2 remote access (accept the defaults)
+```bash
+  ssh-keygen -t rsa
+```
 
 * run `terraform` commands
   - `terraform init`

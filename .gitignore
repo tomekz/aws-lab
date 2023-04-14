@@ -6,3 +6,5 @@
 # aws SDK config files
 src/.aws
 .lesshst
+
+.ssh
