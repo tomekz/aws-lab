@@ -10,7 +10,7 @@ resource "aws_key_pair" "master-key" {
 }
 
 resource "aws_key_pair" "worker-key" {
-  key_name   = "jenkins"
+  key_name   = "jenkins_worker"
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
@@ -29,7 +29,7 @@ resource "aws_instance" "jenkins-master" {
 }
 
 resource "aws_instance" "jenkins-worker" {
-  count                       = 2
+  count                       = 1
   ami                         = data.aws_ssm_parameter.linuxAmi.value
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.worker-key.key_name
