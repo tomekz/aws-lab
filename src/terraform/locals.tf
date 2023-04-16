@@ -1,5 +1,5 @@
 locals {
   tags = {
-    Product     = "aws-lab"
+    Product = "aws-lab"
   }
 }

@@ -24,7 +24,8 @@ RUN apt-get update && \
     add-apt-repository --yes ppa:deadsnakes/ppa && \
     apt-get update && \
     apt-get install -y python3 python3-pip && \
-    pip3 install ansible
+    pip3 install ansible && \
+    pip3 install boto3 --user
 
 RUN useradd app --create-home
 WORKDIR /home/app

@@ -5,7 +5,7 @@ output "Jenkins-Main-Node-Public-IP" {
 
 output "Jenkins-Worker-Public-IPs" {
   value = {
-    for instance in aws_instance.jenkins-worker:
+    for instance in aws_instance.jenkins-worker :
     instance.id => instance.public_ip
   }
 }

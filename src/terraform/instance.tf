@@ -1,6 +1,6 @@
 #Get Linux AMI ID using SSM Parameter endpoint in us-east-1
 data "aws_ssm_parameter" "linuxAmi" {
-  name     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+  name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
 #Create key-pair for logging into EC2 in us-east-1
@@ -26,6 +26,13 @@ resource "aws_instance" "jenkins-master" {
   tags = local.tags
 
   depends_on = [aws_main_route_table_association.set-master-default-rt-assoc]
+
+  provisioner "local-exec" {
+    command = <<EOF
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id}
+  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Product}' ansible_templates/jenkins_master.yml
+  EOF
+  }
 }
 
 resource "aws_instance" "jenkins-worker" {
@@ -41,4 +48,11 @@ resource "aws_instance" "jenkins-worker" {
     Name = join("_", ["jenkins_worker_tf", count.index + 1])
   }
   depends_on = [aws_main_route_table_association.set-master-default-rt-assoc, aws_instance.jenkins-master]
+
+  provisioner "local-exec" {
+    command = <<EOF
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id}
+  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Product}' ansible_templates/jenkins-worker-sample.yml
+  EOF
+}
 }
