@@ -15,6 +15,7 @@ The goal of this repo is to create a sandbox environment for exploring and learn
   - [X] generate ssh key pair for EC2 remote access
 - [ ] setup Jenkins cluster on EC2 
   - [ ] setup Ansible template to install Jenkins
+  - [ ] setup Ansible AWS Dynamic Inventory
   - [ ] configure terraform provisioner to run Ansible playbook on EC2 provision
 
 ## How to run

@@ -23,14 +23,16 @@ resource "aws_instance" "jenkins-master" {
   vpc_security_group_ids      = [aws_security_group.jenkins-sg.id]
   subnet_id                   = aws_subnet.public_1.id
 
-  tags = local.tags
+  tags = {
+    Name = "jenkins_master_tf"
+  }
 
   depends_on = [aws_main_route_table_association.set-master-default-rt-assoc]
 
   provisioner "local-exec" {
     command = <<EOF
-  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id}
-  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Product}' ansible_templates/jenkins_master.yml
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
+  && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}'../ansible_templates/jenkins_master.yaml 
   EOF
   }
 }
@@ -51,8 +53,8 @@ resource "aws_instance" "jenkins-worker" {
 
   provisioner "local-exec" {
     command = <<EOF
-  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id}
-  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Product}' ansible_templates/jenkins-worker-sample.yml
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.aws_region} --instance-ids ${self.id} \
+  && ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ../ansible_templates/jenkins_worker.yaml
   EOF
 }
 }
