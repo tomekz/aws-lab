@@ -4,17 +4,18 @@ The goal of this repo is to create a sandbox environment for exploring and learn
 * [X] setup docker development container 
   - [X] install aws cli 
   - [X] install terraform
-  - [ ] install ansible
+  - [X] install ansible
 - [X] setup terraform and configure it to use aws
 - [X] use s3 bucket to store terraform state
 - [X] setup network resources using terraform
   - [X] create VPC using
   - [X] attach internet gateway to VPC
   - [X] create public subnets
-- [ ] create EC2 instance 
-  - [ ] generate ssh key pair for EC2 remote access
+- [X] create EC2 instance 
+  - [X] generate ssh key pair for EC2 remote access
 - [ ] setup Jenkins cluster on EC2 
-- [ ] setup Ansible to manage Jenkins cluster
+  - [ ] setup Ansible template to install Jenkins
+  - [ ] configure terraform provisioner to run Ansible playbook on EC2 provision
 
 ## How to run
 

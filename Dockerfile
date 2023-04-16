@@ -19,6 +19,13 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv
      && unzip awscliv2.zip \
      && ./aws/install
 
+# Install ansible
+RUN apt-get update && \
+    add-apt-repository --yes ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    pip3 install ansible
+
 RUN useradd app --create-home
 WORKDIR /home/app
 
