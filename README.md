@@ -1,8 +1,8 @@
 ## sandbox for exploring and learning AWS
 
 The goal of this repo is to create a sandbox environment for exploring and learning AWS. I use it as my lab to meet the following learning objectives
-* [X] setup docker development container 
-  - [X] install aws cli 
+* [X] setup docker development container for the controller node
+  - [X] install aws cli
   - [X] install terraform
   - [X] install ansible
 - [X] setup terraform and configure it to use aws

@@ -3,8 +3,12 @@
 .terraform.lock.hcl
 .bash_history
 
-# aws SDK config files
 src/.aws
+src/.cache/
+src/.local/
+src/.python_history
+src/.wget-hsts
+
 .lesshst
 
 .ssh

@@ -23,9 +23,9 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv
 RUN apt-get update && \
     add-apt-repository --yes ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt-get install -y python3 python3-pip && \
+    apt-get install -y python3 python3-pip python3-boto3 && \
     pip3 install ansible && \
-    pip3 install boto3 --user
+    pip3 install boto
 
 RUN useradd app --create-home
 WORKDIR /home/app
