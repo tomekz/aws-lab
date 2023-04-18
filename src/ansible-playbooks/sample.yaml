@@ -1,0 +1,8 @@
+---
+  - name: ilovevim
+    hosts: tag_Role_jenkins_master
+    tasks: 
+      - name: ensure vim is there
+        apt: 
+          name: vim
+          state: latest

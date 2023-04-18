@@ -8,6 +8,7 @@ src/.cache/
 src/.local/
 src/.python_history
 src/.wget-hsts
+src/.ansible
 
 .lesshst
 

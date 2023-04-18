@@ -63,7 +63,16 @@ depending on your region and bucket name you might need to change the `backend.t
   ssh-keygen -t rsa
 ```
 
-* run `terraform` commands
+* run `terraform` commands to provision infrastructure
   - `terraform init`
   - `terraform plan`
   - `terraform apply`
+
+* run `ansible` commands to provision Jenkins cluster
+  - check if ansible can connect to EC2 instances
+    - `ansible -t ansible-aws-inventory/ all -m ping`
+  - run ad-hoc commands
+    - `ansible -t ansible-aws-inventory/ all -a "whoami"`
+    - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
+  - run playbook
+    - `ansible-playbook -t ansible-aws-inventory/ ansible-playbooks/sample.yml`

@@ -3,6 +3,9 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
 # Install terraform
 RUN apt-get update && apt-get install -y gnupg software-properties-common curl
+
+RUN yes | unminimize
+
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | \
     gpg --dearmor | \
     tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
