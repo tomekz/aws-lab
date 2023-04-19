@@ -38,11 +38,12 @@ resource "aws_instance" "jenkins-worker" {
   key_name                    = aws_key_pair.worker-key.key_name
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.jenkins-sg.id]
-  subnet_id                   = aws_subnet.public_2.id
+  subnet_id                   = aws_subnet.public_1.id
 
   tags = {
     Name = join("_", ["jenkins_worker_tf", count.index + 1])
     Role = "jenkins_worker"
   }
   depends_on = [aws_main_route_table_association.set-master-default-rt-assoc, aws_instance.jenkins-master]
+
 }

@@ -12,3 +12,7 @@
           name: httpd
           state: started
           enabled: true
+      - name: Install lynx
+        ansible.builtin.yum:
+          name: lynx
+          state: latest

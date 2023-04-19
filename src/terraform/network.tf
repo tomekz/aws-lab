@@ -1,12 +1,12 @@
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
-  tags                 = local.tags
+  tags                 = merge(local.tags, { "Name" = "aws-lab-vpc" })
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
-  tags   = local.tags
+  tags   = merge(local.tags, { "Name" = "aws-lab-igw" })
 }
 
 #Get all available AZ's in VPC
@@ -16,16 +16,10 @@ data "aws_availability_zones" "azs" {
 
 resource "aws_subnet" "public_1" {
   vpc_id            = aws_vpc.main.id
+  map_public_ip_on_launch = true
   cidr_block        = "10.0.1.0/24"
   availability_zone = element(data.aws_availability_zones.azs.names, 0)
-  tags              = local.tags
-}
-
-resource "aws_subnet" "public_2" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = element(data.aws_availability_zones.azs.names, 1)
-  tags              = local.tags
+  tags              = merge(local.tags, { "Name" = "aws-lab-public-1" })
 }
 
 resource "aws_route_table" "internet_route" {
@@ -37,39 +31,12 @@ resource "aws_route_table" "internet_route" {
   lifecycle {
     ignore_changes = all
   }
-  tags = local.tags
+  tags = merge(local.tags, { "Name" = "aws-lab-rt" })
 }
 
 resource "aws_main_route_table_association" "set-master-default-rt-assoc" {
   vpc_id         = aws_vpc.main.id
   route_table_id = aws_route_table.internet_route.id
-}
-
-#Create SG for Load Balancer, only TCP/80,TCP/443 and outbound access
-resource "aws_security_group" "lb-sg" {
-  name        = "lb-sg"
-  description = "Allow 443 and traffic to Jenkins SG"
-  vpc_id      = aws_vpc.main.id
-  ingress {
-    description = "Allow 443 from anywhere"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "Allow 80 from anywhere for redirection"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 #Create SG for allowing TCP/8080 from * and TCP/22 from your IP
@@ -89,7 +56,14 @@ resource "aws_security_group" "jenkins-sg" {
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    security_groups = [aws_security_group.lb-sg.id]
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "Allow 80 from anywhere for redirection"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     from_port   = 0

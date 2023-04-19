@@ -8,9 +8,8 @@ The goal of this repo is to create a sandbox environment for exploring and learn
 - [X] setup terraform and configure it to use aws
 - [X] use s3 bucket to store terraform state
 - [X] setup network resources using terraform
-  - [X] create VPC using
-  - [X] attach internet gateway to VPC
-  - [X] create public subnets
+  - [X] create VPC
+  - [X] create public subnet
 - [X] create EC2 instance 
   - [X] generate ssh key pair for EC2 remote access
 - [ ] setup Jenkins cluster on EC2 
@@ -69,6 +68,8 @@ depending on your region and bucket name you might need to change the `backend.t
   - `terraform apply`
 
 * run `ansible` commands to provision Jenkins cluster
+  - see the inventory graph
+    - `ansible-inventory --graph`
   - check if ansible can connect to EC2 instances
     - `ansible -t ansible-aws-inventory/ all -m ping`
   - run ad-hoc commands
