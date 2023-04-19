@@ -76,4 +76,4 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible -t ansible-aws-inventory/ all -a "whoami"`
     - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
   - run playbook
-    - `ansible-playbook -t ansible-aws-inventory/ ansible-playbooks/apache2.yaml`
+    - `ansible-playbook -t ansible-aws-inventory/ ansible-playbooks/jenkins_master.yaml`
