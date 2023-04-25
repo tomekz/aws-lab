@@ -10,12 +10,12 @@ The goal of this repo is to create a sandbox environment for exploring and learn
 - [X] setup network resources using terraform
   - [X] create VPC
   - [X] create public subnet
+  - [X] create ALB to expose Jenkins cluster
 - [X] create EC2 instance 
   - [X] generate ssh key pair for EC2 remote access
-- [ ] setup Jenkins cluster on EC2 
-  - [ ] setup Ansible template to install Jenkins
-  - [ ] setup Ansible AWS Dynamic Inventory
-  - [ ] configure terraform provisioner to run Ansible playbook on EC2 provision
+- [o] setup Jenkins cluster on EC2 
+  - [X] setup Ansible template to install Jenkins
+  - [X] setup Ansible AWS Dynamic Inventory
 
 ## How to run
 

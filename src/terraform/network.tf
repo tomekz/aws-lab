@@ -22,6 +22,14 @@ resource "aws_subnet" "public_1" {
   tags              = merge(local.tags, { "Name" = "aws-lab-public-1" })
 }
 
+resource "aws_subnet" "public_2" {
+  vpc_id            = aws_vpc.main.id
+  map_public_ip_on_launch = true
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = element(data.aws_availability_zones.azs.names, 1)
+  tags              = merge(local.tags, { "Name" = "aws-lab-public-2" })
+}
+
 resource "aws_route_table" "internet_route" {
   vpc_id = aws_vpc.main.id
   route {
@@ -84,13 +92,6 @@ resource "aws_security_group" "jenkins-sg" {
     to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.lb-sg.id]
-  }
-  ingress {
-    description = "Allow 80 from anywhere for redirection"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     from_port   = 0
