@@ -1,21 +1,32 @@
 ## sandbox for exploring and learning AWS
 
-The goal of this repo is to create a sandbox environment for exploring and learning AWS. I use it as my lab to meet the following learning objectives
+The goal of this repo is to create a sandbox environment for exploring and learning AWS.
+The environment will host a Jenkins cluster that will be used to run CI/CD pipelines.
+The Jenkins cluster will be deployed using terraform and ansible.
+The deployment architecture will be as follows:
+
+![deployment architecture](deployment_architecture.png)
+
+The lab will allow me to learn and practice the following:
+
 * [X] setup docker development container for the controller node
   - [X] install aws cli
   - [X] install terraform
   - [X] install ansible
 - [X] setup terraform and configure it to use aws
+  - [X] create IAM terraform user with programmatic access
 - [X] use s3 bucket to store terraform state
 - [X] setup network resources using terraform
-  - [X] create VPC
-  - [X] create public subnet
+  - [X] create VPC, internet GWs and subnets
+  - [X] create security groups
   - [X] create ALB to expose Jenkins cluster
-- [X] create EC2 instance 
-  - [X] generate ssh key pair for EC2 remote access
+- [o] create EC2 instance 
+  - [X] use data source to get latest AMI
+  - [X] generate and deploy ssh key pair for EC2 remote access
+  - [ ] deploy Jenkins master and worker EC2 instances
 - [o] setup Jenkins cluster on EC2 
-  - [X] setup Ansible template to install Jenkins
   - [X] setup Ansible AWS Dynamic Inventory
+  - [X] setup Ansible template to install Jenkins
 
 ## How to run
 
