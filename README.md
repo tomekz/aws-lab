@@ -26,7 +26,7 @@ The lab will allow me to learn and practice the following:
   - [ ] deploy Jenkins master and worker EC2 instances
 - [o] setup Jenkins cluster on EC2 
   - [X] setup Ansible AWS Dynamic Inventory
-  - [X] setup Ansible template to install Jenkins
+  - [X] setup Ansible playbook to install Jenkins master and workers
 
 ## How to run
 
@@ -88,3 +88,7 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
   - run playbook
     - `ansible-playbook -t ansible-aws-inventory/ ansible-playbooks/jenkins_master.yaml`
+
+## Gotchas
+- because I didn't have any registered domain available I have to use the public DNS of the ALB to access Jenkins (e.g. "jenkins-lb-502928849.eu-central-1.elb.amazonaws.com") over HTTP
+- I use pre-configured Jenkins installation made available as part of cloud-guru lesson https://github.com/linuxacademy/content-terraform-jenkins.git. The admin login credentials are stored in `jenkins_auth` file. It's ONLY meant to be used for learning purposes within a TEST environment
