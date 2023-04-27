@@ -87,7 +87,8 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible -t ansible-aws-inventory/ all -a "whoami"`
     - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
   - run playbook
-    - `ansible-playbook -t ansible-aws-inventory/ ansible-playbooks/jenkins_master.yaml`
+    - `ansible-playbook ansible-playbooks/jenkins_master.yaml`
+    - `ansible-playbook ansible-playbooks/jenkins_worker.yaml --extra-vars master_ip=<master ip>` // <master_ip> is the private IP of the EC2 instance hosting master Jenkins node (lookup in the console)
 
 ## Gotchas
 - because I didn't have any registered domain available I have to use the public DNS of the ALB to access Jenkins (e.g. "jenkins-lb-502928849.eu-central-1.elb.amazonaws.com") over HTTP
