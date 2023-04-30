@@ -1,5 +1,5 @@
 # A simple Ubuntu container with Git and other common utilities installed.
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
+FROM --platform=linux/amd64 mcr.microsoft.com/devcontainers/base:ubuntu
 
 # Install terraform
 RUN apt-get update && apt-get install -y gnupg software-properties-common curl
@@ -29,6 +29,13 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip python3-boto3 && \
     pip3 install ansible && \
     pip3 install boto
+
+# Install go
+WORKDIR /tmp 
+RUN wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz && \
+    rm -rf /usr/local/go && \
+    tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz && \
+    echo "export PATH=$PATH:/etc/profile" >> ~/.bashrc
 
 RUN useradd app --create-home
 WORKDIR /home/app

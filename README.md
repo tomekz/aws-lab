@@ -13,6 +13,7 @@ The lab will allow me to learn and practice the following:
   - [X] install aws cli
   - [X] install terraform
   - [X] install ansible
+  - [X] install golang
 - [X] setup terraform and configure it to use aws
   - [X] create IAM terraform user with programmatic access
 - [X] use s3 bucket to store terraform state
