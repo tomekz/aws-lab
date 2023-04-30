@@ -9,7 +9,8 @@ src/.local/
 src/.python_history
 src/.wget-hsts
 src/.ansible
+src/.bashrc
+src/go/
 
 .lesshst
-
 .ssh

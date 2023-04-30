@@ -1,6 +1,8 @@
 # A simple Ubuntu container with Git and other common utilities installed.
 FROM --platform=linux/amd64 mcr.microsoft.com/devcontainers/base:ubuntu
 
+ENV TERM=xterm-256color
+
 # Install terraform
 RUN apt-get update && apt-get install -y gnupg software-properties-common curl
 
@@ -35,7 +37,7 @@ WORKDIR /tmp
 RUN wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz && \
     rm -rf /usr/local/go && \
     tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz && \
-    echo "export PATH=$PATH:/etc/profile" >> ~/.bashrc
+    echo "export PATH=$PATH:/usr/local/go/bin:/home/app/go/bin" >> ~/.bashrc
 
 RUN useradd app --create-home
 WORKDIR /home/app
