@@ -56,7 +56,11 @@ docker-compose up --build
 * exec into container
 
 ```
+<<<<<<< HEAD
 docker exec -it aws-lab-app-1 bash
+=======
+docker exec -it lab-jenkins-app-1 bash
+>>>>>>> ca63f38 (restructure repo to hold mutliple labs)
 ```
 
 * run `aws` commands to create s3 bucket to store terraform state

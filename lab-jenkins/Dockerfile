@@ -20,7 +20,11 @@ RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
 RUN apt update && apt-get install terraform
 
 # Install aws cli
+<<<<<<< HEAD
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" \
+=======
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+>>>>>>> ca63f38 (restructure repo to hold mutliple labs)
      && unzip awscliv2.zip \
      && ./aws/install
 
