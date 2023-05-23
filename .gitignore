@@ -3,14 +3,14 @@
 .terraform.lock.hcl
 .bash_history
 
-src/.aws
-src/.cache/
-src/.local/
-src/.python_history
-src/.wget-hsts
-src/.ansible
-src/.bashrc
-src/go/
+.aws
+.cache/
+.local/
+.python_history
+.wget-hsts
+.ansible
+.bashrc
+go/
 
 .lesshst
 .ssh
