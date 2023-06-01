@@ -1,41 +1,85 @@
-Set up the EC2 cluster:
+## Kafka lab
+The lab environment will host a Kafka cluster of two nodes using Amazon EC2 instances
+Another set of EC2 instances will host a microservices that will produce messages to the Kafka cluster
+The entire infrastructure will be deployed using terraform and ansible.
+The deployment architecture will be as follows:
 
-* [ ] Launch EC2 instances with the desired instance type, operating system, and configuration. Ensure that the instances have appropriate security groups, IAM roles, and network settings.
-* [ ] Install Docker on each EC2 instance to facilitate containerization.
-    * [ ] run `ansible-galaxy collection install community.docker` to install the docker collection
+TODO - add diagram
 
-Build Docker images for each microservice:
-* [ ] For each microservice (User Service, Email Service, Notification Service, and Feed Service), create a Dockerfile that defines the container image.
-* [ ] Use the appropriate base image for Go applications and specify the necessary dependencies and build instructions.
-* [ ] Build the Docker image for each microservice using a command like docker build -t <image-name> ..
+The lab will allow me to learn and practice the following:
 
-Set up Kafka on the EC2 cluster:
+* [ ] Set up the EC2 cluster:
+  -  [ ] Launch EC2 instances with the desired instance type, operating system, and configuration. Ensure that the instances have appropriate security groups, IAM roles, and network settings.
+  - [ ] Install Docker on each EC2 instance to facilitate containerization.
+  - [ ] run `ansible-galaxy collection install community.docker` to install the docker collection
+* [ ] Build Docker images for each microservice:
+  - [ ] For each microservice (User Service, Email Service, Notification Service, and Feed Service), create a Dockerfile that defines the container image.
+  - [ ] Use the appropriate base image for Go applications and specify the necessary dependencies and build instructions.
+  - [ ] Build the Docker image for each microservice using a command like docker build -t <image-name> ..
+* [ ] Set up Kafka on the EC2 cluster:
+  - [ ] Install Kafka on one or more EC2 instances within the cluster. Follow the Kafka documentation or use a tool like Confluent Platform to simplify the setup process.
+  - [ ] Configure Kafka to use multiple topics, including the "user-events" topic in this example.
+  - [ ] Ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
+* [ ] Deploy microservices on the EC2 cluster:
+  - [ ] Create deployment scripts or use an orchestration tool like Docker Swarm or Kubernetes to manage the deployment process
+  - [ ] Launch containers for each microservice on the EC2 instances using the Docker images built earlier.
+  - [ ] Configure the microservices to connect to the appropriate Kafka broker(s) and subscribe to the relevant topics.
+* [ ] Set up load balancing and networking:
+  - [ ] Configure a load balancer (e.g., Elastic Load Balancer) to distribute incoming traffic across the EC2 instances running the microservices.
+  - [ ] Ensure that the load balancer is properly configured to handle the gRPC communication ports for each microservice.
+* [ ] Configure security:
+  -[ ] Apply security best practices to secure the EC2 instances, including using security groups to control inbound and outbound traffic, configuring SSL/TLS for gRPC communication, and securing access to Kafka and other services.
+* Monitor and scale:
+  - [ ] Implement monitoring and logging mechanisms to track the health and performance of the deployed system. Use tools like CloudWatch, Prometheus, or ELK stack for monitoring and log analysis.
+  - [ ] Set up autoscaling policies to automatically scale the EC2 cluster based on resource utilization or other metrics.
 
-* [ ] Install Kafka on one or more EC2 instances within the cluster. Follow the Kafka documentation or use a tool like Confluent Platform to simplify the setup process.
-* [ ] Configure Kafka to use multiple topics, including the "user-events" topic in this example.
-* [ ] Ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
+## How to run
 
-Deploy microservices on the EC2 cluster:
+In order to run the project you need to have docker installed on your machine.
+You also need to have an AWS account and create an IAM user with programmatic access.
+The IAM user should have the minimal set of permissions required to run the terraform code.
 
-* [ ] Create deployment scripts or use an orchestration tool like Docker Swarm or Kubernetes to manage the deployment process.
-* [ ] Launch containers for each microservice on the EC2 instances using the Docker images built earlier.
-* [ ] Configure the microservices to connect to the appropriate Kafka broker(s) and subscribe to the relevant topics.
+* make sure you put your IAM terraform user credentials inside `.aws` folder in the current directory that will be mounted as a volume of the development container 
 
-Set up load balancing and networking:
+```bash
+# .aws/credentials
+[default]
+aws_access_key_id = <your access key>
+aws_secret_access_key = <your secret key>
 
-* [ ] Configure a load balancer (e.g., Elastic Load Balancer) to distribute incoming traffic across the EC2 instances running the microservices.
-* [ ] Ensure that the load balancer is properly configured to handle the gRPC communication ports for each microservice.
+# .aws/config
+[default]
+region = <your region>
+```
 
-Configure security:
+* start development container
 
-* [ ] Apply security best practices to secure the EC2 instances, including using security groups to control inbound and outbound traffic, configuring SSL/TLS for gRPC communication, and securing access to Kafka and other services.
+```bash
+docker-compose up --build
+```
 
-Monitor and scale:
+* exec into container
 
-* [ ] Implement monitoring and logging mechanisms to track the health and performance of the deployed system. Use tools like CloudWatch, Prometheus, or ELK stack for monitoring and log analysis.
-* [ ] Set up autoscaling policies to automatically scale the EC2 cluster based on resource utilization or other metrics.
+```
+docker exec -it lab-kafka-app-1 bash
+```
 
-Test and troubleshoot:
+* run `aws` commands to create s3 bucket to store terraform state
 
-* [ ] Conduct thorough testing to ensure that the deployed system is functioning as expected. Perform integration tests, load tests, and simulate failure scenarios to verify the system's resilience.
-* [ ] Monitor logs and metrics to identify any issues or bottlenecks and troubleshoot them accordingly.
+```bash
+aws s3api create-bucket --bucket <your bucket name> --region <your region name> --create-bucket-configuration LocationConstraint=<your region name>
+```
+
+depending on your region and bucket name you might need to change the `backend.tf` file
+
+```bash
+* generate ssh key pair for EC2 remote access (accept the defaults)
+```bash
+  ssh-keygen -t rsa
+```
+
+* run `terraform` commands to provision infrastructure
+  - `terraform init`
+  - `terraform plan`
+  - `terraform apply`
+

@@ -1,12 +1,7 @@
 version: "3.8"
 services:
-  app-jenkins:
-    build: lab-jenkins
+  app:
+    build: .
     volumes:
-      - ./src/:/home/app
-    command: ["tail", "-f", "/dev/null"]
-  app-kafka:
-    build: lab-kafka
-    volumes:
-      - ./src/:/home/app
+      - ./:/home/app
     command: ["tail", "-f", "/dev/null"]
