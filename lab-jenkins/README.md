@@ -67,7 +67,6 @@ aws s3api create-bucket --bucket <your bucket name> --region <your region name> 
 
 depending on your region and bucket name you might need to change the `backend.tf` file
 
-```bash
 * generate ssh key pair for EC2 remote access (accept the defaults)
 ```bash
   ssh-keygen -t rsa

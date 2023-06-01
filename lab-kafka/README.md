@@ -1,6 +1,6 @@
 ## Kafka lab
-The lab environment will host a Kafka cluster of two nodes using Amazon EC2 instances
-Another set of EC2 instances will host a microservices that will produce messages to the Kafka cluster
+The lab environment will host a Kafka cluster of two nodes using Amazon EC2 instances.
+Another set of EC2 instances will host microservices that will produce messages to the Kafka cluster
 The entire infrastructure will be deployed using terraform and ansible.
 The deployment architecture will be as follows:
 
@@ -10,14 +10,13 @@ The lab will allow me to learn and practice the following:
 
 * [ ] Set up the EC2 cluster:
   -  [ ] Launch EC2 instances with the desired instance type, operating system, and configuration. Ensure that the instances have appropriate security groups, IAM roles, and network settings.
-  - [ ] Install Docker on each EC2 instance to facilitate containerization.
-  - [ ] run `ansible-galaxy collection install community.docker` to install the docker collection
+  - [ ] Install Docker on each EC2 instance to facilitate containerization with ansible
 * [ ] Build Docker images for each microservice:
   - [ ] For each microservice (User Service, Email Service, Notification Service, and Feed Service), create a Dockerfile that defines the container image.
   - [ ] Use the appropriate base image for Go applications and specify the necessary dependencies and build instructions.
   - [ ] Build the Docker image for each microservice using a command like docker build -t <image-name> ..
 * [ ] Set up Kafka on the EC2 cluster:
-  - [ ] Install Kafka on one or more EC2 instances within the cluster. Follow the Kafka documentation or use a tool like Confluent Platform to simplify the setup process.
+  - [ ] Install Kafka on one or more EC2 instances within the cluster. 
   - [ ] Configure Kafka to use multiple topics, including the "user-events" topic in this example.
   - [ ] Ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
 * [ ] Deploy microservices on the EC2 cluster:
@@ -82,4 +81,17 @@ depending on your region and bucket name you might need to change the `backend.t
   - `terraform init`
   - `terraform plan`
   - `terraform apply`
+* 
+* run `ansible` commands to provision Kafka cluster
+  - see the inventory graph
+    - `ansible-inventory --graph`
+  - check if ansible can connect to EC2 instances
+    - `ansible -t ansible-aws-inventory/ all -m ping`
+  - run ad-hoc commands
+    - `ansible -t ansible-aws-inventory/ all -a "whoami"`
+    - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
+  - run playbook
+    - `ansible-playbook ansible-playbooks/jenkins_master.yaml`
+    - `ansible-playbook ansible-playbooks/jenkins_worker.yaml --extra-vars master_ip=<master ip>` // <master_ip> is the private IP of the EC2 instance hosting master Jenkins node (lookup in the console)
+
 
