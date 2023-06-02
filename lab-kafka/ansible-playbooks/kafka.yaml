@@ -1,0 +1,6 @@
+---
+- name: "AWS - Install docker & docker-compose"
+  hosts: tag_Role_kafka_node
+  become: true
+  remote_user: ec2-user
+  tasks:

@@ -31,6 +31,13 @@ resource "aws_security_group" "kafka-node-sg" {
     protocol    = "tcp"
     self        = true
   }
+  ingress {
+    description = "Allow 2181 between kafka nodes"
+    from_port   = 2181
+    to_port     = 2181
+    protocol    = "tcp"
+    self        = true
+  }
   egress {
     from_port   = 0
     to_port     = 0

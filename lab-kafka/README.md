@@ -17,6 +17,18 @@ The lab will allow me to learn and practice the following:
   - [X] Install other tools like netcat and jq to facilitate testing and debugging.
 * [ ] Set up Kafka on the EC2 cluster:
   - [ ] Install Kafka on one or more EC2 instances within the cluster. 
+       - [ ] To allow Kafka and ZooKeeper to persist files on the host filesystem, you need to map two directories from the host to the Docker containers 
+             ```
+             volumes:
+              - ./data/kafka:/bitnami/kafka
+              - ./data/zookeeper:/bitnami/zookeeper
+             ```
+        - [ ] change the ownerships of the two directories, granting the container processes the permissions to read and write.
+              ```
+              sudo chown 1001.1001 /data/zookeeper/
+              sudo chown 1001.1001 /data/kafka/
+              ```
+        - [ ] Create a docker-compose.yml file. This file will define the services and configurations for your Kafka cluster.
   - [ ] Configure Kafka to use multiple topics, including the "user-events" topic in this example.
   - [ ] Ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
 * [ ] Build Docker images for each microservice:
