@@ -8,12 +8,13 @@ TODO - add diagram
 
 The lab will allow me to learn and practice the following:
 
-* [O] Set up the EC2 cluster for kafka deployment:
-  - [X] Using terraform provision EC2 instances with Amazon Linux 2 AMI operating system.
-  - [o] Ensure that the instances have appropriate security groups, and network settings:
-      - [ ] allowing inbound and outbound traffic for Kafka ports (e.g., 9092) only between the EC2 instances within the cluster.
+* [X] Set up the EC2 cluster for kafka deployment:
+  - [X] Using terraform provision EC2 instances using Amazon Linux 2 AMI.
+  - [X] Ensure that the instances have appropriate security groups, and network settings:
+      - [X] allowing inbound and outbound traffic for Kafka ports (e.g., 9092) only between the EC2 instances within the cluster.
       - [X] allow inbound traffic for SSH (port 22) 
-  - [X] Install docker & docker-compose on each EC2 instance to facilitate containerization. Automate this with ansible
+  - [X] Install docker & docker-compose on each EC2 instance to facilitate containerization.
+  - [X] Install other tools like netcat and jq to facilitate testing and debugging.
 * [ ] Set up Kafka on the EC2 cluster:
   - [ ] Install Kafka on one or more EC2 instances within the cluster. 
   - [ ] Configure Kafka to use multiple topics, including the "user-events" topic in this example.
