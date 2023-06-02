@@ -28,3 +28,8 @@
         url: "https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64"
         dest: /usr/local/bin/docker-compose
         mode: 0755
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
