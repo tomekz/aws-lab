@@ -24,13 +24,13 @@ resource "aws_security_group" "kafka-node-sg" {
     protocol    = "tcp"
     cidr_blocks = [var.external_ip]
   }
-  # ingress {
-  #   description     = "allow anyone on port 8080"
-  #   from_port       = 8080
-  #   to_port         = 8080
-  #   protocol        = "tcp"
-  #   security_groups = [aws_security_group.lb-sg.id]
-  # }
+  ingress {
+    description = "Allow 9092 between kafka nodes"
+    from_port   = 9092
+    to_port     = 9092
+    protocol    = "tcp"
+    self        = true
+  }
   egress {
     from_port   = 0
     to_port     = 0
