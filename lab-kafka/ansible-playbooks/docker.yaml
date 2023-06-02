@@ -1,0 +1,30 @@
+---
+- name: "AWS - Install docker & docker-compose"
+  hosts: tag_Role_kafka_node
+  become: true
+  remote_user: ec2-user
+  tasks:
+    - name: Update all packages
+      yum:
+        name: '*'
+        state: latest
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - docker
+    - name: Enable Some packages from amazon-linux-extras packages
+      shell: "amazon-linux-extras enable docker"
+    - name: Enable Docker CE service at startup
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    - name: Download Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: 0755
