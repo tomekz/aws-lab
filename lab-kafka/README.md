@@ -1,6 +1,9 @@
 ## Kafka lab
 The lab environment will host a Kafka cluster of two nodes using Amazon EC2 instances.
+Nodes will be running inside self managed docker containers.
+
 Another set of EC2 instances will host go microservices that will produce and consume messages from the Kafka cluster
+
 The entire infrastructure will be deployed using terraform and ansible.
 
 The deployment architecture will be as follows:
@@ -20,8 +23,8 @@ The lab will allow me to learn and practice the following:
   - [X] Install Kafka on both EC2 instances within the cluster. 
        - [X] Use [bitnami](https://github.com/bitnami) docker images that run in user mode and do not require root privileges.(in particular user ID 1001)
        - [X] Create a docker-compose.yml files for each cluster node. These files will define the services and configurations for the Kafka cluster.
-       - [X] To allow Kafka and ZooKeeper to persist files on the host filesystem, we need to map two directories from the host to the Docker containers: ` volumes: - ./data/kafka:/bitnami/kafka ./data/zookeeper:/bitnami/zookeeper`
-        - [X] change the ownerships of the two directories, granting the container processes the permissions to read and write.` sudo chown 1001.1001 /data/zookeeper/ sudo chown 1001.1001 /data/kafka/`
+       - [X] To allow Kafka and ZooKeeper to persist files on the host filesystem, we need to map two directories from the host to the Docker containers: **volumes: - ./data/kafka:/bitnami/kafka ./data/zookeeper:/bitnami/zookeeper**
+        - [X] change the ownerships of the two directories, granting the container processes the permissions to read and write.**sudo chown 1001.1001 /data/zookeeper/ sudo chown 1001.1001 /data/kafka/**
         - [X] Configure Kafka and ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
 * [ ] Build Docker images for each microservice:
   - [ ] For each microservice (User Service, Email Service, Notification Service, and Feed Service), create a Dockerfile that defines the container image.
@@ -99,8 +102,8 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible -t ansible-aws-inventory/ all -a "whoami"`
     - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
   - run playbooks
-    - `ansible-playbook ansible-playbooks/docker.yaml` // install docker on every node
-    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=1"` // provision kafka node 1
-    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=2"` // provision kafka node 2
+    - `ansible-playbook ansible-playbooks/docker.yaml` - install docker on every node
+    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=1"` - provision kafka node 1
+    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=2"` - provision kafka node 2
 `
   - check if it's working and both kafka nodes can communicate: `docker run --tty confluentinc/cp-kafkacat kafkacat -b <kafka-node-private-ip>:9092 -L` (you need to run this command from a kafka node)

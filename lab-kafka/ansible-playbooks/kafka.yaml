@@ -6,7 +6,7 @@
 
   vars:
     node_number: "{{ node_number }}"
-
+    ansible_python_interpreter: /usr/bin/python3.7  # Specify the path to the Python interpreter
   tasks:
   - name: Create /data/kafka volume dir and setup permissions
     file:
@@ -29,3 +29,27 @@
       owner: ec2-user
       group: ec2-user
       mode: 0644
+  - name: Install urllib3 library
+    pip:
+      name: urllib3
+      state: present
+      version: 1.26.6
+  - name: Install docker library
+    pip:
+      name: docker
+      state: present
+  - name: Install docker-compose library
+    pip:
+      name: docker-compose
+      state: present
+  - name: Verify Docker Compose file exists
+    stat:
+      path: "/home/ec2-user/docker-compose-node-{{ node_number }}.yaml"
+    register: docker_compose_file
+  - name: deploy Docker Compose stack
+    community.docker.docker_compose:
+      project_src: /home/ec2-user
+      files:
+        - docker-compose-node-{{ node_number }}.yaml
+    when: docker_compose_file.stat.exists
+
