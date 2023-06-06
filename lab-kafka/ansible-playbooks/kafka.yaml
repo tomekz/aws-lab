@@ -6,7 +6,10 @@
 
   vars:
     node_number: "{{ node_number }}"
-    ansible_python_interpreter: /usr/bin/python3.7  # Specify the path to the Python interpreter
+    ansible_python_interpreter: /usr/bin/python3.7
+    zoo_servers: "{{ zoo_servers }}"
+    kafka_cfg_advertised_listeners: "{{ kafka_cfg_advertised_listeners }}"
+
   tasks:
   - name: Create /data/kafka volume dir and setup permissions
     file:
@@ -46,6 +49,12 @@
     stat:
       path: "/home/ec2-user/docker-compose-node-{{ node_number }}.yaml"
     register: docker_compose_file
+  - name: Create .env file
+    copy:
+      content: |
+        ZOO_SERVERS="{{ zoo_servers }}"
+        KAFKA_CFG_ADVERTISED_LISTENERS="{{ kafka_cfg_advertised_listeners }}"
+      dest: /home/ec2-user/.env
   - name: deploy Docker Compose stack
     community.docker.docker_compose:
       project_src: /home/ec2-user
