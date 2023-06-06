@@ -1,6 +1,31 @@
 ---
-- name: "AWS - Install docker & docker-compose"
-  hosts: tag_Role_kafka_node
+- name: "AWS - setup kafka cluster"
+  hosts: tag_Name_lab_kafka_node_{{ node_number }}
   become: true
   remote_user: ec2-user
+
+  vars:
+    node_number: "{{ node_number }}"
+
   tasks:
+  - name: Create /data/kafka volume dir and setup permissions
+    file:
+      path: /data/kafka
+      state: directory
+      owner: 1001
+      group: 1001
+      mode: 0775
+  - name: Create /data/zookeeper volume dir and setup permissions
+    file:
+      path: /data/zookeeper
+      state: directory
+      owner: 1001
+      group: 1001
+      mode: 0775
+  - name: Copy `kafka/docker-compose-node-<node_number>.yaml` docker-compose file
+    copy:
+      src: "kafka/docker-compose-node-{{ node_number }}.yaml"
+      dest: /home/ec2-user/
+      owner: ec2-user
+      group: ec2-user
+      mode: 0644
