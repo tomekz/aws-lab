@@ -1,3 +1,4 @@
+# kafka cluster node 1
 version: '2'
 
 services:
@@ -12,7 +13,8 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_SERVER_ID=1
-      - ZOO_SERVERS=0.0.0.0:2888:3888,10.0.1.174:2888:3888
+      - ZOO_SERVERS=0.0.0.0:2888:3888,10.0.1.144:2888:3888
+      - ZOO_HEAP_SIZE=512
   kafka:
     image: 'docker.io/bitnami/kafka:2-debian-10'
     ports:
@@ -31,7 +33,7 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=EXTERNAL:PLAINTEXT
       - KAFKA_CFG_LISTENERS=EXTERNAL://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=EXTERNAL://ec2-A-B-C-D.us-east-1.compute.amazonaws.com:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=EXTERNAL://10.0.1.62:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=EXTERNAL
     depends_on:
       - zookeeper
