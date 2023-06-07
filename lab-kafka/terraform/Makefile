@@ -1,4 +1,4 @@
-.PHONY: clean init plan apply
+.PHONY: clean init plan apply-tf apply
 #default environment, can be overwritten: ENV?=prod
 ifndef ENVIRONMENT
 override ENVIRONMENT = dev
@@ -14,8 +14,11 @@ init: clean
 plan:
 	terraform plan -out terraform.plan -var-file=envs/$(ENV).tfvars -detailed-exitcode
 
-apply:
+apply-tf:
 	terraform apply -auto-approve terraform.plan
+
+apply: 
+	bash apply-capture-output.sh
 
 clean:
 	@rm -fr terraform.*
