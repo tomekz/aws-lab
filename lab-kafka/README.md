@@ -92,7 +92,7 @@ depending on your region and bucket name you might need to change the `backend.t
   - `make init`
   - `make plan`
   - `make apply`
-  Note down the public and private IP addresses of the EC2 instances. You will need them later to connect to the instances and run the Ansible playbooks. Sample output:
+  The output containing public and private IP addresses of the EC2 instances will be captured to `ansible-playbook/.env` file so that they can be later references inside the Ansible playbooks. Sample output:
   
   ```
   Outputs:
