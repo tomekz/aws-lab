@@ -113,7 +113,7 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
   - run playbooks
     - `ansible-playbook ansible-playbooks/docker.yaml` - install docker on every node
-    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=1" --extra-vars "zoo_servers=0.0.0.0:2888:3888,<kafka-node-2-private-ip>:2888:3888" --extra-vars "kafka_cfg_advertised_listeners=EXTERNAL://<kafka-node-1-public-ip>:9092"` - provision kafka node 1
-    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=2" --extra-vars "zoo_servers=<kafka-node-1-private-ip>:2888:3888,0.0.0.0:2888:3888" --extra-vars "kafka_cfg_advertised_listeners=EXTERNAL://<kafka-node-2-public-ip>:9092"` - provision kafka node 2
+    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=1"` - provision kafka node 1
+    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=2"` - provision kafka node 2
 `
   - check if it's working and both kafka nodes can communicate: `docker run --tty confluentinc/cp-kafkacat kafkacat -b <kafka-node-private-ip>:9092 -L` (you need to run this command from a kafka node)
