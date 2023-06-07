@@ -2,7 +2,7 @@
 .terraform
 .terraform.lock.hcl
 .bash_history
-
+tfenv
 .aws
 .cache/
 .local/

@@ -88,10 +88,10 @@ depending on your region and bucket name you might need to change the `backend.t
   ssh-keygen -t rsa
 ```
 
-* run `terraform` commands to provision infrastructure
-  - `terraform init`
-  - `terraform plan`
-  - `terraform apply`
+* run `make` commands to provision infrastructure
+  - `make init`
+  - `make plan`
+  - `make apply`
   Note down the public and private IP addresses of the EC2 instances. You will need them later to connect to the instances and run the Ansible playbooks. Sample output:
   
   ```
