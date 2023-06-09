@@ -1,0 +1,21 @@
+---
+- name: "AWS - start kafka cluster"
+  hosts: tag_Role_kafka_node
+  become: true
+  remote_user: ec2-user
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.7
+
+  tasks:
+  - name: Verify Docker Compose file exists
+    stat:
+      path: "/home/ec2-user/docker-compose.yaml"
+    register: docker_compose_file
+  - name: deploy and start Docker Compose stack
+    community.docker.docker_compose:
+      project_src: /home/ec2-user
+      files:
+        - docker-compose.yaml
+    when: docker_compose_file.stat.exists
+

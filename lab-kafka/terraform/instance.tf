@@ -13,6 +13,11 @@ resource "aws_key_pair" "kafka-node-2" {
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
+resource "aws_key_pair" "kafka-node-3" {
+  key_name   = "kafka-node-3"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
 resource "aws_security_group" "kafka-node-sg" {
   name        = "kafka-node-sg"
   description = "Allow TCP/22"
@@ -88,3 +93,16 @@ resource "aws_instance" "kafka-node-2" {
   }
 }
 
+resource "aws_instance" "kafka-node-3" {
+  ami                         = data.aws_ssm_parameter.linuxAmi.value
+  instance_type               = "t3.micro"
+  key_name                    = aws_key_pair.kafka-node-3.key_name
+  associate_public_ip_address = true
+  vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
+  subnet_id                   = aws_subnet.public_1.id
+
+  tags = {
+    Name = "lab-kafka-node-3"
+    Role = "kafka-node"
+  }
+}

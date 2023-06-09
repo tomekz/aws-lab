@@ -26,7 +26,7 @@
   - name: Copy `kafka/docker-compose-node-<node_number>.yaml` docker-compose file
     copy:
       src: "kafka/docker-compose-node-{{ node_number }}.yaml"
-      dest: /home/ec2-user/
+      dest: /home/ec2-user/docker-compose.yaml
       owner: ec2-user
       group: ec2-user
       mode: 0644
@@ -43,10 +43,6 @@
     pip:
       name: docker-compose
       state: present
-  - name: Verify Docker Compose file exists
-    stat:
-      path: "/home/ec2-user/docker-compose-node-{{ node_number }}.yaml"
-    register: docker_compose_file
   - name: copy .env file
     copy:
       src: .env
@@ -54,10 +50,3 @@
       owner: ec2-user
       group: ec2-user
       mode: 0644
-  - name: deploy Docker Compose stack
-    community.docker.docker_compose:
-      project_src: /home/ec2-user
-      files:
-        - docker-compose-node-{{ node_number }}.yaml
-    when: docker_compose_file.stat.exists
-

@@ -1,5 +1,5 @@
 ## Kafka lab
-The lab environment will host a Kafka cluster of two nodes using Amazon EC2 instances.
+The lab environment will host a Kafka cluster of three nodes using Amazon EC2 instances.
 Nodes will be running inside self managed docker containers.
 
 Another set of EC2 instances will host go microservices that will produce and consume messages from the Kafka cluster
@@ -92,7 +92,7 @@ depending on your region and bucket name you might need to change the `backend.t
   - `make init`
   - `make plan`
   - `make apply`
-  The output containing public and private IP addresses of the EC2 instances will be captured to `ansible-playbook/.env` file so that they can be later references inside the Ansible playbooks. Sample output:
+  The output containing public and private IP addresses of the EC2 instances will be captured to `ansible-playbook/.env` file so that they can be later referenced inside the Ansible playbooks. Sample output:
   
   ```
   Outputs:
@@ -101,6 +101,8 @@ depending on your region and bucket name you might need to change the `backend.t
   kafka-node-1-public-ip = "18.195.216.14"
   kafka-node-2-private-ip = "10.0.1.53"
   kafka-node-2-public-ip = "18.195.64.60"
+  kafka-node-3-private-ip = "10.0.1.71"
+  kafka-node-3-public-ip = "18.195.64.70"
   ```
 
 * run `ansible` commands to provision Kafka cluster
@@ -108,12 +110,11 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible-inventory --graph`
   - check if ansible can connect to EC2 instances
     - `ansible -t ansible-aws-inventory/ all -m ping`
-  - run ad-hoc commands
-    - `ansible -t ansible-aws-inventory/ all -a "whoami"`
-    - `ansible -t ansible-aws-inventory/ all -a "cat /etc/os-release"`
   - run playbooks
     - `ansible-playbook ansible-playbooks/docker.yaml` - install docker on every node
-    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=1"` - provision kafka node 1
-    - `ansible-playbook ansible-playbooks/kafka.yaml --extra-vars "node_number=2"` - provision kafka node 2
+    - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=1"` - provision kafka node 1
+    - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=2"` - provision kafka node 2
+    - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=3"` - provision kafka node 3
+    - `ansible-playbook ansible-playbooks/kafka-start.yaml` - start kafka cluster
 `
   - check if it's working and both kafka nodes can communicate: `docker run --tty confluentinc/cp-kafkacat kafkacat -b <kafka-node-private-ip>:9092 -L` (you need to run this command from a kafka node)

@@ -1,4 +1,4 @@
-# kafka cluster node 2
+# kafka cluster node 3
 version: '2'
 
 services:
@@ -12,8 +12,8 @@ services:
       - '/data/zookeeper:/bitnami'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
-      - ZOO_SERVER_ID=2
-      - ZOO_SERVERS=${KAFKA_NODE_1_PRIVATE_IP}:2888:3888,0.0.0.0:2888:3888,${KAFKA_NODE_3_PRIVATE_IP}:2888:3888
+      - ZOO_SERVER_ID=3
+      - ZOO_SERVERS=${KAFKA_NODE_1_PRIVATE_IP}:2888:3888,${KAFKA_NODE_2_PRIVATE_IP}:2888:3888,0.0.0.0:2888:3888
       - ZOO_HEAP_SIZE=512
   kafka:
     image: 'docker.io/bitnami/kafka:2-debian-10'
@@ -22,7 +22,7 @@ services:
     volumes:
       - '/data/kafka:/bitnami/kafka'
     environment:
-      - KAFKA_BROKER_ID=2
+      - KAFKA_BROKER_ID=3
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CFG_NUM_PARTITIONS=1
       - KAFKA_HEAP_OPTS=-Xmx512m -Xms512m
@@ -33,7 +33,7 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=EXTERNAL:PLAINTEXT
       - KAFKA_CFG_LISTENERS=EXTERNAL://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=EXTERNAL://${KAFKA_NODE_2_PRIVATE_IP}:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=EXTERNAL://${KAFKA_NODE_3_PRIVATE_IP}:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=EXTERNAL
     depends_on:
       - zookeeper
