@@ -20,12 +20,13 @@ The lab will allow me to learn and practice the following:
   - [X] Install docker & docker-compose on each EC2 instance to facilitate containerization.
   - [X] Install other tools like `netcat` and `jq` to facilitate testing and debugging.
 * [X] Set up Kafka on the EC2 cluster:
-  - [X] Install Kafka on both EC2 instances within the cluster. 
+  - [X] Install Kafka on all EC2 instances within the cluster. 
        - [X] Use [bitnami](https://github.com/bitnami) docker images that run in user mode and do not require root privileges.(in particular user ID 1001)
        - [X] Create a docker-compose.yml files for each cluster node. These files will define the services and configurations for the Kafka cluster.
        - [X] To allow Kafka and ZooKeeper to persist files on the host filesystem, we need to map two directories from the host to the Docker containers: **volumes: - ./data/kafka:/bitnami/kafka ./data/zookeeper:/bitnami/zookeeper**
        - [X] change the ownerships of the two directories, granting the container processes the permissions to read and write.**sudo chown 1001.1001 /data/zookeeper/ sudo chown 1001.1001 /data/kafka/**
        - [X] Configure Kafka and ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
+       - [X] Install ZooKeeper on first EC2 instance only and colocate it with Kafka broker running already on the same server. (cost optimization, not a best practice)
 * [ ] Build Docker images for each microservice:
   - [ ] For each microservice (User Service, Email Service, Notification Service, and Feed Service), create a Dockerfile that defines the container image.
   - [ ] Use the appropriate base image for Go applications and specify the necessary dependencies and build instructions.
@@ -115,6 +116,7 @@ depending on your region and bucket name you might need to change the `backend.t
     - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=1"` - provision kafka node 1
     - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=2"` - provision kafka node 2
     - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=3"` - provision kafka node 3
-    - `ansible-playbook ansible-playbooks/kafka-start.yaml` - start kafka cluster
 `
+alternatively you can run `make ansible` to run all playbooks at once
+
   - check if it's working and both kafka nodes can communicate: `docker run --tty confluentinc/cp-kafkacat kafkacat -b <kafka-node-private-ip>:9092 -L` (you need to run this command from a kafka node)

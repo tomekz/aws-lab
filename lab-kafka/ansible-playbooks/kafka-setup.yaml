@@ -50,3 +50,13 @@
       owner: ec2-user
       group: ec2-user
       mode: 0644
+  - name: Verify Docker Compose file exists
+    stat:
+      path: "/home/ec2-user/docker-compose.yaml"
+    register: docker_compose_file
+  - name: deploy and start Docker Compose stack
+    community.docker.docker_compose:
+      project_src: /home/ec2-user
+      files:
+        - docker-compose.yaml
+    when: docker_compose_file.stat.exists
