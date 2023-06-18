@@ -37,3 +37,9 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=EXTERNAL
     depends_on:
       - zookeeper
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    ports:
+      - 9000:9000
+    environment:
+      - ZK_HOSTS=zookeeper:2181
