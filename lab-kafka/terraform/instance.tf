@@ -30,6 +30,13 @@ resource "aws_security_group" "kafka-node-sg" {
     cidr_blocks = [var.external_ip]
   }
   ingress {
+    description = "Allow 9000 from our public IP"
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = [var.external_ip]
+  }
+  ingress {
     description = "Allow 3888 between kafka nodes"
     from_port   = 3888
     to_port     = 3888
