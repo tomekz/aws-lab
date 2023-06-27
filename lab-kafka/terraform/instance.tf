@@ -47,19 +47,20 @@ resource "aws_security_group" "kafka-node-sg" {
   description = "Allow TCP/22"
   vpc_id      = aws_vpc.main.id
   ingress {
-    description = "Allow 22 from our public IP"
+    description = "Allow ssh from the bastion host"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.external_ip]
+    security_groups = [aws_security_group.bastion-host-sg.id]
   }
-  ingress {
-    description = "Allow 9000 from our public IP"
-    from_port   = 9000
-    to_port     = 9000
-    protocol    = "tcp"
-    cidr_blocks = [var.external_ip]
-  }
+  # this will have to go via load balancer
+  # ingress {
+  #   description = "Allow 9000 from our public IP"
+  #   from_port   = 9000
+  #   to_port     = 9000
+  #   protocol    = "tcp"
+  #   cidr_blocks = [var.external_ip]
+  # }
   ingress {
     description = "Allow 3888 between kafka nodes"
     from_port   = 3888
@@ -101,7 +102,7 @@ resource "aws_instance" "bastion-host" {
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.bastion-host-key-pair.key_name
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
+  vpc_security_group_ids      = [aws_security_group.bastion-host-sg.id]
   subnet_id                   = aws_subnet.public_1.id
 
   tags = {
@@ -115,7 +116,7 @@ resource "aws_instance" "kafka-node-1" {
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.kafka-node-1.key_name
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.bastion-host-sg.id]
+  vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
 
   tags = {
@@ -129,7 +130,7 @@ resource "aws_instance" "kafka-node-2" {
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.kafka-node-2.key_name
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.bastion-host-sg.id]
+  vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
 
   tags = {
@@ -143,7 +144,7 @@ resource "aws_instance" "kafka-node-3" {
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.kafka-node-3.key_name
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.bastion-host-sg.id]
+  vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
 
   tags = {
