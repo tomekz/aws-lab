@@ -8,15 +8,16 @@ The entire infrastructure will be deployed using terraform and ansible.
 
 The deployment architecture will be as follows:
 
-TODO - add diagram
+![deployment architecture](deployment_architecture.png)
 
 The lab will allow me to learn and practice the following:
 
 * [X] Set up the EC2 cluster for kafka deployment:
-  - [X] Using terraform provision EC2 instances based Amazon Linux 2 AMI.
+  - [X] Setup private and public subnets with bastion host in public subnet and kafka nodes in private subnet
+  - [X] Provision EC2 instances based Amazon Linux 2 AMI.
   - [X] Ensure that the instances have appropriate security groups, and network settings:
       - [X] allow inbound and outbound traffic for Kafka ports (e.g., 9092) only between the EC2 instances within the cluster.
-      - [X] allow inbound traffic for SSH (port 22) 
+      - [X] allow inbound traffic for SSH from the bastion host only.
   - [X] Install docker & docker-compose on each EC2 instance to facilitate containerization.
   - [X] Install other tools like `netcat` and `jq` to facilitate testing and debugging.
 * [X] Set up Kafka on the EC2 cluster:

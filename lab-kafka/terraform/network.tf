@@ -22,7 +22,7 @@ resource "aws_subnet" "public_1" {
   tags              = merge(local.tags, { "Name" = "aws-lab-kafka-public-1" })
 }
 
-resource "aws_subnet" "private_2" {
+resource "aws_subnet" "private_1" {
   vpc_id            = aws_vpc.main.id
   map_public_ip_on_launch = true
   cidr_block        = "10.0.2.0/24"
