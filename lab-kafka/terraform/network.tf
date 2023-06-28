@@ -21,7 +21,6 @@ resource "aws_nat_gateway" "nat" {
 }
 
 resource "aws_eip" "nat" {
-  vpc = true
   tags = local.tags
 }
 
