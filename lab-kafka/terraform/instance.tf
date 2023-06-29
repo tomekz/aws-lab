@@ -5,7 +5,7 @@ data "aws_ssm_parameter" "linuxAmi" {
 resource "null_resource" "copy_ssh_key_to_bastion_host" {
   provisioner "local-exec" {
     command = <<EOT
-      scp -ov "StrictHostKeyChecking=no" ~/.ssh/id_rsa ec2-user@${aws_instance.bastion-host.public_ip}:/home/ec2-user/.ssh/
+      scp -o "StrictHostKeyChecking=no" ~/.ssh/id_rsa ec2-user@${aws_instance.bastion-host.public_ip}:/home/ec2-user/.ssh/
     EOT
   }
 }
