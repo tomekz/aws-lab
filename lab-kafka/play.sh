@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Running Ansible ping command..."
-ansible_ping_output=$(ansible -t ansible-aws-inventory/ all -m ping 2>&1)
+ansible_ping_output=$(ansible all -m ping 2>&1)
 
 if [[ $ansible_ping_output == *"SUCCESS"* ]]; then
     echo "Ansible ping command succeeded."
