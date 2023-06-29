@@ -17,6 +17,7 @@ plan:
 apply:
 	terraform apply -auto-approve terraform.plan
 	bash capture-output.sh
+	bash generate-inventory.sh
 
 destroy:
 	terraform destroy -auto-approve -var-file=envs/$(ENV).tfvars

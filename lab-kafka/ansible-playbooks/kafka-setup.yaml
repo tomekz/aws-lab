@@ -1,6 +1,6 @@
 ---
 - name: "AWS - setup kafka cluster"
-  hosts: tag_Name_lab_kafka_node_{{ node_number }}
+  hosts: node_{{ node_number }}
   become: true
   remote_user: ec2-user
 
