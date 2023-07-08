@@ -14,12 +14,6 @@ RUN apt-get update && \
     pip3 install ansible && \
     pip3 install boto
 
-# Install go
-WORKDIR /tmp 
-RUN wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz && \
-    rm -rf /usr/local/go && \
-    tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz && \
-    echo "export PATH=$PATH:/usr/local/go/bin:/home/app/go/bin" >> ~/.bashrc
 
 RUN useradd app --create-home
 WORKDIR /home/app
@@ -27,5 +21,12 @@ WORKDIR /home/app
 # Install tfenv
 RUN git clone https://github.com/tfutils/tfenv.git tfenv
 ENV PATH="/home/app/tfenv/bin:${PATH}"
+
+# Install go
+RUN wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz && \
+    rm -rf /usr/local/go && \
+    tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz
+
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 USER app
