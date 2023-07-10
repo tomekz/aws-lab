@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"service/types"
-	// "github.com/anthdm/pricefetcher/types"
 )
 
+// APIFunc is a custom type for http handler function that supports context param and returns error
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
 type JSONAPIServer struct {
@@ -25,7 +25,7 @@ func NewJSONAPIServer(listenAddr string, svc HelloService) *JSONAPIServer {
 }
 
 func (s *JSONAPIServer) Run() {
-	http.HandleFunc("/", makeHTTPHandlerFunc(s.handleFetchPrice))
+	http.HandleFunc("/", makeHTTPHandlerFunc(s.handleHello))
 	http.ListenAndServe(s.listenAddr, nil)
 }
 
@@ -40,7 +40,7 @@ func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
 	}
 }
 
-func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (s *JSONAPIServer) handleHello(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	name := r.URL.Query().Get("name")
 
 	greeting, err := s.svc.Hello(ctx, name)
