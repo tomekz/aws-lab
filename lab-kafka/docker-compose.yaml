@@ -5,3 +5,5 @@ services:
     volumes:
       - ./:/home/app
     command: ["tail", "-f", "/dev/null"]
+    ports: 
+      - '3000:3000'

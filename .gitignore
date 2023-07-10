@@ -11,7 +11,6 @@ tfenv
 .wget-hsts
 .ansible
 .bashrc
-go/
 
 .lesshst
 .ssh
