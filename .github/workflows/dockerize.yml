@@ -1,0 +1,25 @@
+name: Dockerize hello-service
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          fetch-depth: 0
+    - uses: rickstaa/action-get-semver@v1
+      id: get_semver
+      with:
+       bump_level: "minor"
+    - name: Build the Docker image
+      working-directory: lab-kafka/service
+      run: docker build . --file Dockerfile --tag hello-service:${{ steps.get_semver.outputs.current_version  }}"
