@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 )
 
 func main() {
@@ -13,5 +12,4 @@ func main() {
 
 	server := NewJSONAPIServer(*listenAddr, svc)
 	server.Run()
-	fmt.Println("Server is running on", *listenAddr)
 }

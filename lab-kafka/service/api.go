@@ -27,6 +27,8 @@ func NewJSONAPIServer(listenAddr string, svc HelloService) *JSONAPIServer {
 
 func (s *JSONAPIServer) Run() {
 	http.HandleFunc("/", makeHTTPHandlerFunc(s.handleHello))
+	log.Println("Server is running on", s.listenAddr)
+
 	if err := http.ListenAndServe(s.listenAddr, nil); err != nil {
 		log.Fatalf("failed to listen and serve: %v", err)
 	}
