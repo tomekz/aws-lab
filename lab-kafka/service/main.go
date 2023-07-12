@@ -1,6 +1,9 @@
 package main
 
-import "flag"
+import (
+	"flag"
+	"fmt"
+)
 
 func main() {
 	listenAddr := flag.String("listenaddr", ":3000", "listen address the service is running")
@@ -10,4 +13,5 @@ func main() {
 
 	server := NewJSONAPIServer(*listenAddr, svc)
 	server.Run()
+	fmt.Println("Server is running on", *listenAddr)
 }

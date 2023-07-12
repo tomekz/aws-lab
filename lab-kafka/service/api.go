@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"math/rand"
 	"net/http"
 
@@ -26,7 +27,9 @@ func NewJSONAPIServer(listenAddr string, svc HelloService) *JSONAPIServer {
 
 func (s *JSONAPIServer) Run() {
 	http.HandleFunc("/", makeHTTPHandlerFunc(s.handleHello))
-	http.ListenAndServe(s.listenAddr, nil)
+	if err := http.ListenAndServe(s.listenAddr, nil); err != nil {
+		log.Fatalf("failed to listen and serve: %v", err)
+	}
 }
 
 func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
