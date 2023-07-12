@@ -22,4 +22,4 @@ jobs:
        bump_level: "minor"
     - name: Build the Docker image
       working-directory: lab-kafka/service
-      run: docker build . --file Dockerfile --tag hello-service:${{ steps.get_semver.outputs.current_version  }}"
+      run: docker build . --file Dockerfile --tag hello-service:${{ steps.get_semver.outputs.current_version  }}
