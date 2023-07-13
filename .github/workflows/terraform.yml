@@ -53,34 +53,8 @@ jobs:
   tf_apply:
     name: Terraform plab and apply
     runs-on: ubuntu-latest
-    if:  ${{ inputs.tfpath }} && !${{ inputs.destroy }}
+    if:  ${{ inputs.tfpath && inputs.destroy != true }}
     steps:
-    # - name: Checkout tf code in runner environment
-    #   uses: actions/checkout@v3.5.2
-    #
-    # - name: Configure AWS Credentials Action For GitHub Actions
-    #   uses: aws-actions/configure-aws-credentials@v2
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     aws-region: eu-central-1
-    #
-    # - name: Setup Terraform CLI
-    #   uses: hashicorp/setup-terraform@v2.0.2
-    #
-    # - name: Setup Tfenv
-    #   uses: rhythmictech/actions-setup-tfenv@v0.0.4
-    #
-    # - name: Terraform init and validate
-    #   run: |
-    #     echo `pwd`
-    #     echo "tfpath ${{ github.event.inputs.tfpath }}"
-    #     echo "** Running Terraform Init**"
-    #     make init
-    #     
-    #     echo "** Running Terraform Validate**"
-    #     terraform validate
-    #   working-directory: ${{ github.event.inputs.tfpath }}
     - name: Terraform plan and apply
       run: |
         echo `pwd`
@@ -102,7 +76,7 @@ jobs:
   tf_destroy:
     name: Terraform destroy
     runs-on: ubuntu-latest
-    if:  ${{ inputs.tfpath }} && ${{ inputs.destroy }}
+    if: ${{ inputs.tfpath && inputs.destroy }}
     steps:
       - name: Terraform Destroy
         run: |
