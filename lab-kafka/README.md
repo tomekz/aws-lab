@@ -4,7 +4,8 @@ Nodes will be running inside self managed docker containers.
 
 Another set of EC2 instances will host go microservices that will produce and consume messages from the Kafka cluster
 
-The entire infrastructure will be deployed using terraform and ansible.
+The entire infrastructure will be deployed using terraform and ansible and the deployment
+automation will be done using Github actions
 
 The deployment architecture will be as follows:
 
