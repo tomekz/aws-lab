@@ -10,7 +10,7 @@ on:
         required: true
         default: 'lab-kafka/terraform'
       destroy:
-        description: 'When TRUE the `tf_apply` job will be skipped and `tf_destroy` will be fired instead'
+        description: 'When TRUE the destroy will be fired instead of apply'
         type: boolean
         required: true
         default: false
@@ -20,8 +20,8 @@ on:
     branches: [ main ]
 
 jobs:
-  tf_setup:
-    name: Terraform setup
+  terraform_apply:
+    name: Terraform plan & apply
     runs-on: ubuntu-latest
     if:  ${{ inputs.tfpath }}
     steps:
@@ -55,12 +55,9 @@ jobs:
         echo "** Running Terraform Validate**"
         terraform validate
       working-directory: ${{ github.event.inputs.tfpath }}
-  tf_apply:
-    name: Terraform plan and apply
-    runs-on: ubuntu-latest
-    if: ${{ inputs.tfpath && inputs.destroy != true }}
-    steps:
+
     - name: Terraform plan and apply
+      if: ${{ inputs.tfpath && inputs.destroy != true }}
       run: |
         echo `pwd`
         echo "tfpath ${{ github.event.inputs.tfpath }}"        
@@ -74,17 +71,15 @@ jobs:
       working-directory: ${{ github.event.inputs.tfpath }}
 
     - name: Upload artifacts
+      if: ${{ inputs.tfpath && inputs.destroy != true }}
       uses: actions/upload-artifact@v3
       with:
         name: env-file
         path: ansible-playbooks/.env
-  tf_destroy:
-    name: Terraform destroy
-    runs-on: ubuntu-latest
-    if: ${{ inputs.tfpath && inputs.destroy }}
-    steps:
-      - name: Terraform Destroy
-        run: |
-          echo "** Running Terraform Destroy**"
-          make destroy
-        working-directory: ${{ github.event.inputs.tfpath }}
+
+    - name: Terraform Destroy
+      if: ${{ inputs.tfpath && inputs.destroy }}
+      run: |
+        echo "** Running Terraform Destroy**"
+        make destroy
+      working-directory: ${{ github.event.inputs.tfpath }}
