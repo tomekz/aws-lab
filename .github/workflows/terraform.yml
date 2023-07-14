@@ -25,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     if:  ${{ inputs.tfpath }}
     steps:
+    - name: Checkout tf code in runner environment
+      uses: actions/checkout@v3.5.2
+
     - name: generate ssh key
       run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
       # working-directory: ${{ env.applicationfolder }}
-
-    - name: Checkout tf code in runner environment
-      uses: actions/checkout@v3.5.2
 
     - name: Configure AWS Credentials Action For GitHub Actions
       uses: aws-actions/configure-aws-credentials@v2
