@@ -8,22 +8,7 @@ resource "null_resource" "copy_ssh_key_to_bastion_host" {
       scp -o "StrictHostKeyChecking=no" ~/.ssh/id_rsa ec2-user@${aws_instance.bastion-host.public_ip}:/home/ec2-user/.ssh/
     EOT
   }
-}
-
-#Create key-pair for logging into EC2
-resource "aws_key_pair" "kafka-node-1" {
-  key_name   = "kafka-node-1"
-  public_key = file("~/.ssh/id_rsa.pub")
-}
-
-resource "aws_key_pair" "kafka-node-2" {
-  key_name   = "kafka-node-2"
-  public_key = file("~/.ssh/id_rsa.pub")
-}
-
-resource "aws_key_pair" "kafka-node-3" {
-  key_name   = "kafka-node-3"
-  public_key = file("~/.ssh/id_rsa.pub")
+  depends_on = [aws_instance.bastion-host]
 }
 
 resource "aws_key_pair" "bastion-host-key-pair" {
@@ -122,13 +107,12 @@ resource "aws_instance" "bastion-host" {
 resource "aws_instance" "kafka-node-1" {
   ami                         = data.aws_ssm_parameter.linuxAmi.value
   instance_type               = "t3.micro"
-  key_name                    = aws_key_pair.kafka-node-1.key_name
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
   user_data     = <<-EOF
     #!/bin/bash
-    echo "${aws_key_pair.kafka-node-1.public_key}" >> /home/ec2-user/.ssh/authorized_keys
+    echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
     chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys
     chmod 600 /home/ec2-user/.ssh/authorized_keys
   EOF
@@ -142,13 +126,12 @@ resource "aws_instance" "kafka-node-1" {
 resource "aws_instance" "kafka-node-2" {
   ami                         = data.aws_ssm_parameter.linuxAmi.value
   instance_type               = "t3.micro"
-  key_name                    = aws_key_pair.kafka-node-2.key_name
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
   user_data     = <<-EOF
     #!/bin/bash
-    echo "${aws_key_pair.kafka-node-2.public_key}" >> /home/ec2-user/.ssh/authorized_keys
+    echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
     chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys
     chmod 600 /home/ec2-user/.ssh/authorized_keys
   EOF
@@ -162,13 +145,12 @@ resource "aws_instance" "kafka-node-2" {
 resource "aws_instance" "kafka-node-3" {
   ami                         = data.aws_ssm_parameter.linuxAmi.value
   instance_type               = "t3.micro"
-  key_name                    = aws_key_pair.kafka-node-3.key_name
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
   user_data     = <<-EOF
     #!/bin/bash
-    echo "${aws_key_pair.kafka-node-3.public_key}" >> /home/ec2-user/.ssh/authorized_keys
+    echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
     chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys
     chmod 600 /home/ec2-user/.ssh/authorized_keys
   EOF
