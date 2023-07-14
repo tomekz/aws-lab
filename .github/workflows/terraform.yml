@@ -62,9 +62,6 @@ jobs:
         echo `pwd`
         echo "tfpath ${{ github.event.inputs.tfpath }}"        
         echo "** Running Terraform Plan**"
-        terraform plan
-        
-        echo "** Running Terraform Apply**"
         make plan
         echo "** Running Terraform Apply**"
         make apply
