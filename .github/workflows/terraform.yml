@@ -21,11 +21,14 @@ on:
 
 jobs:
   tf_setup:
-    needs: key-gen
     name: Terraform setup
     runs-on: ubuntu-latest
     if:  ${{ inputs.tfpath }}
     steps:
+    - name: generate ssh key
+      run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
+      # working-directory: ${{ env.applicationfolder }}
+
     - name: Checkout tf code in runner environment
       uses: actions/checkout@v3.5.2
 
