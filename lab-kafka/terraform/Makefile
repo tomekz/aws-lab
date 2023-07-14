@@ -12,7 +12,7 @@ init: clean
 	terraform init -reconfigure -backend-config='bucket=$(STATE_BUCKET)' -var-file=envs/$(ENV).tfvars
 
 plan:
-	terraform plan -out terraform.plan -var-file=envs/$(ENV).tfvars -detailed-exitcode
+	terraform plan -out terraform.plan -var-file=envs/$(ENV).tfvars
 
 apply:
 	terraform apply -auto-approve terraform.plan
