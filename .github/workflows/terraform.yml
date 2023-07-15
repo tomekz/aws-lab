@@ -9,6 +9,9 @@ on:
         description: 'terraform source dir'
         required: true
         default: 'lab-kafka/terraform'
+      public_key:
+        description: 'ssh public key that will be used to connect to EC2 jump host'
+        required: true
       destroy:
         description: 'When TRUE the destroy will be fired instead of apply'
         type: boolean
@@ -28,14 +31,14 @@ jobs:
     - name: Checkout tf code in runner environment
       uses: actions/checkout@v3.5.2
 
-    - name: generate ssh key
-      run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
+    # - name: generate ssh key
+    #   run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
 
-    - name: Archive SSH key
-      uses: actions/upload-artifact@v3
-      with:
-        name: ssh-key
-        path: ~/.ssh/
+    # - name: upload ssh key
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: ssh-key
+    #     path: ~/.ssh/
 
     - name: Configure AWS Credentials Action For GitHub Actions
       uses: aws-actions/configure-aws-credentials@v2
@@ -51,6 +54,8 @@ jobs:
       uses: rhythmictech/actions-setup-tfenv@v0.0.4
 
     - name: Terraform init
+      env:
+          TF_VAR_public_key: ${{ github.event.inputs.public_key }}
       run: |
         echo `pwd`
         echo "tfpath ${{ github.event.inputs.tfpath }}"
@@ -62,6 +67,8 @@ jobs:
       working-directory: ${{ github.event.inputs.tfpath }}
 
     - name: Terraform plan and apply
+      env:
+          TF_VAR_public_key: ${{ github.event.inputs.public_key }}
       if: ${{ inputs.tfpath && inputs.destroy != true }}
       run: |
         echo `pwd`
@@ -72,12 +79,12 @@ jobs:
         make apply
       working-directory: ${{ github.event.inputs.tfpath }}
 
-    - name: Upload artifacts
-      if: ${{ inputs.tfpath && inputs.destroy != true }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: env-file
-        path: ansible-playbooks/.env
+    # - name: Upload artifacts
+    #   if: ${{ inputs.tfpath && inputs.destroy != true }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: env-file
+    #     path: ansible-playbooks/.env
 
     - name: Terraform Destroy
       if: ${{ inputs.tfpath && inputs.destroy }}
