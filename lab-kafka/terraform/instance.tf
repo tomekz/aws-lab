@@ -2,15 +2,6 @@ data "aws_ssm_parameter" "linuxAmi" {
   name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
-resource "null_resource" "copy_ssh_key_to_bastion_host" {
-  provisioner "local-exec" {
-    command = <<EOT
-      scp -o "StrictHostKeyChecking=no" ~/.ssh/id_rsa ec2-user@${aws_instance.bastion-host.public_ip}:/home/ec2-user/.ssh/
-    EOT
-  }
-  depends_on = [aws_instance.bastion-host]
-}
-
 resource "aws_key_pair" "bastion-host-key-pair" {
   key_name   = "bastion-host"
   public_key = file("~/.ssh/id_rsa.pub")

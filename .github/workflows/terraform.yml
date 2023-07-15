@@ -30,7 +30,6 @@ jobs:
 
     - name: generate ssh key
       run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
-      # working-directory: ${{ env.applicationfolder }}
 
     - name: Configure AWS Credentials Action For GitHub Actions
       uses: aws-actions/configure-aws-credentials@v2
