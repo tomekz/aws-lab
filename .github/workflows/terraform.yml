@@ -31,6 +31,12 @@ jobs:
     - name: generate ssh key
       run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
 
+    - name: Archive SSH key
+      uses: actions/upload-artifact@v3
+      with:
+        name: ssh-key
+        path: ~/.ssh/
+
     - name: Configure AWS Credentials Action For GitHub Actions
       uses: aws-actions/configure-aws-credentials@v2
       with:
