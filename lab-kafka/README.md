@@ -107,7 +107,27 @@ depending on your region and bucket name you might need to change the `backend.t
   kafka-node-3-private-ip = "10.0.1.71"
   kafka-node-3-public-ip = "18.195.64.70"
   ```
+  
+* ssh into provisioned EC2 instances over bastion host
 
+```bash
+# ~/.ssh/config
+
+Host bastion
+  HostName <bastion-host public ip>
+  User ec2-user
+  IdentityFile ~/.ssh/id_rsa
+
+Host node-1
+  HostName <node-1 private ip>
+  User ec2-user
+  ProxyJump bastion
+
+Host node-2
+  HostName <node-2 private ip>
+  User ec2-user
+  ProxyJump bastion
+```
 * run `ansible` commands to provision Kafka cluster
   - see the inventory graph
     - `ansible-inventory --graph`
