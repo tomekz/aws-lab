@@ -23,7 +23,7 @@ on:
     branches: [ main ]
 
 jobs:
-  terraform_apply:
+  terraform:
     name: Terraform plan & apply
     runs-on: ubuntu-latest
     if:  ${{ inputs.tfpath }}
@@ -83,3 +83,25 @@ jobs:
         echo "** Running Terraform Destroy**"
         make destroy
       working-directory: ${{ github.event.inputs.tfpath }}
+  ansible:
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3.5.2
+
+      - name: Download inventory file
+        uses: actions/download-artifact@v2
+        with:
+          name: ansible_inventory
+          path: ${{ github.workspace }}/ansible-aws-inventory/inventory.ini
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Run Ansible Playbooks
+        run: ansible-playbook -i ${{ github.workspace }}/ansible-aws-inventory/inventory.ini docker.yml
+
