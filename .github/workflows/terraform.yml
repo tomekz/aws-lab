@@ -94,7 +94,7 @@ jobs:
       - name: Download inventory file
         uses: actions/download-artifact@v2
         with:
-          name: ansible_inventory
+          name: ansible inventory file
           path: ${{ github.workspace }}/ansible-aws-inventory/inventory.ini
 
       - name: Install Ansible
