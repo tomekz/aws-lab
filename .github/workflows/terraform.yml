@@ -10,7 +10,7 @@ on:
         required: true
         default: 'lab-kafka/terraform'
       public_key:
-        description: 'ssh public key that will be used to connect to EC2 jump host'
+        description: 'ssh public key that will be used to connect to EC2 instances'
         required: true
       destroy:
         description: 'When TRUE the destroy will be fired instead of apply'
@@ -30,15 +30,6 @@ jobs:
     steps:
     - name: Checkout tf code in runner environment
       uses: actions/checkout@v3.5.2
-
-    # - name: generate ssh key
-    #   run: $GITHUB_WORKSPACE/.github/scripts/key-gen.sh
-
-    # - name: upload ssh key
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: ssh-key
-    #     path: ~/.ssh/
 
     - name: Configure AWS Credentials Action For GitHub Actions
       uses: aws-actions/configure-aws-credentials@v2
@@ -79,12 +70,12 @@ jobs:
         make apply
       working-directory: ${{ github.event.inputs.tfpath }}
 
-    # - name: Upload artifacts
-    #   if: ${{ inputs.tfpath && inputs.destroy != true }}
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: env-file
-    #     path: ansible-playbooks/.env
+    - name: Upload artifacts
+      if: ${{ inputs.tfpath && inputs.destroy != true }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ansible inventory file
+        path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini
 
     - name: Terraform Destroy
       if: ${{ inputs.tfpath && inputs.destroy }}

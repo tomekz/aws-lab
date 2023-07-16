@@ -1,4 +1,7 @@
 #!/bin/bash
+# This script runs the Terraform output command to get the IP addresses of the EC2 instances
+# and then uses the IP addresses to generate an Ansible inventory file.
+# This script is called from the Makefile
 #
 bastion_host_public_ip=$(terraform output -raw bastion-host-public-ip)
 kafka_node_1_private_ip=$(terraform output -raw kafka-node-1-private-ip)

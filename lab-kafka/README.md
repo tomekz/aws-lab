@@ -85,7 +85,7 @@ aws s3api create-bucket --bucket <your bucket name> --region <your region name> 
 
 depending on your region and bucket name you might need to change the `backend.tf` file
 
-* generate ssh key pair for EC2 remote access (accept the defaults)
+* generate ssh key pair for EC2 remote access (accept the defaults) and pass public key value to terraform using `public_key` variable
 
 ```bash
   ssh-keygen -t rsa
@@ -95,7 +95,8 @@ depending on your region and bucket name you might need to change the `backend.t
   - `make init`
   - `make plan`
   - `make apply`
-  The output containing public and private IP addresses of the EC2 instances will be captured to `ansible-playbook/.env` file so that they can be later referenced inside the Ansible playbooks. Sample output:
+  As part of apply stage the `generate-inventory.sh` script will be triggered that generates `ansible-aws-inventory/inventory.ini` config file
+  Sample output:
   
   ```
   Outputs:

@@ -16,7 +16,6 @@ plan:
 
 apply:
 	terraform apply -auto-approve terraform.plan
-	bash capture-output.sh
 	bash generate-inventory.sh
 
 destroy:

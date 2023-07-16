@@ -1,0 +1,31 @@
+name: Deploy with Ansible
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  download_inventory:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3.5.2
+
+      - name: Download inventory file
+        uses: actions/download-artifact@v2
+        with:
+          name: ansible_inventory
+          path: ${{ github.workspace }}/ansible-aws-inventory
+          clean: true
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Run Ansible Playbooks
+        run: ansible-playbook -i ${{ github.workspace }}/ansible-aws-inventory/inventory.ini docker.yml
