@@ -95,7 +95,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ansible inventory file
-          path: ${{ github.workspace }}/ansible-aws-inventory/inventory.ini
+          path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini
 
       - name: Install Ansible
         run: |
@@ -103,5 +103,5 @@ jobs:
           sudo apt-get install -y ansible
 
       - name: Run Ansible Playbooks
-        run: ansible-playbook -i ${{ github.workspace }}/ansible-aws-inventory/inventory.ini docker.yml
+        run: ansible-playbook -i ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini docker.yml
 
