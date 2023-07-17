@@ -74,7 +74,7 @@ jobs:
       if: ${{ inputs.tfpath && inputs.destroy != true }}
       uses: actions/upload-artifact@v3
       with:
-        name: ansible inventory file
+        name: ansible_inventory_file
         path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini
 
     - name: Terraform Destroy
@@ -98,15 +98,15 @@ jobs:
       - name: Download inventory file
         uses: actions/download-artifact@v3
         with:
-          name: ansible inventory file
-          path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini
+          name: ansible_inventory_file
+          path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
+
+      - name: see inventory
+        run: unzip -o ansible_inventory_file | cat inventory.ini
+        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
       - name: Display structure of downloaded files
         run: ls -la
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
-
-      - name: see inventory
-        run: cat inventory.ini
         working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
       - name: Install Ansible
