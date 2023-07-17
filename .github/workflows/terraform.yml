@@ -91,11 +91,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.5.2
 
+      - name: Display structure of downloaded files (pre)
+        run: ls -la
+        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
+
       - name: Download inventory file
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ansible inventory file
           path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini
+
+      - name: Display structure of downloaded files
+        run: ls -la
+        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
+
+      - name: see inventory
+        run: cat inventory.ini
+        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
       - name: Install Ansible
         run: |

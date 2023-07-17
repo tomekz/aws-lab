@@ -96,7 +96,7 @@ depending on your region and bucket name you might need to change the `backend.t
   - `make plan`
   - `make apply`
   As part of apply stage the `generate-inventory.sh` script will be triggered that generates `ansible-aws-inventory/inventory.ini` config file
-  Sample output:
+  Sample tf output:
   
   ```
   Outputs:
