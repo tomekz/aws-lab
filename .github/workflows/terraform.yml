@@ -12,6 +12,10 @@ on:
       public_key:
         description: 'ssh public key that will be used to connect to EC2 instances'
         required: true
+      skip_terraform:
+        description: 'When TRUE terraform job will be skipped'
+        type: boolean
+        default: false
       destroy:
         description: 'When TRUE the destroy will be fired instead of apply'
         type: boolean
@@ -26,7 +30,7 @@ jobs:
   terraform:
     name: Terraform plan & apply
     runs-on: ubuntu-latest
-    if:  ${{ inputs.tfpath }}
+    if:  ${{ inputs.tfpath && inputs.skip_terraform != true }} 
     steps:
     - name: Checkout tf code in runner environment
       uses: actions/checkout@v3.5.2
