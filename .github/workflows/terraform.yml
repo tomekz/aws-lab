@@ -86,7 +86,7 @@ jobs:
   ansible:
     runs-on: ubuntu-latest
     needs: terraform
-    if: ${{ inputs.tfpath && inputs.destroy != true }}
+    # if: ${{ inputs.tfpath && inputs.destroy != true }}
 
     steps:
       - name: Checkout repository
@@ -107,9 +107,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ansible
 
-      - name: Run ansible ping
-        run: ansible all -m ping
-        working-directory: ${{ github.workspace }}/lab-kafka
+      # - name: Run ansible ping
+      #   run: ansible all -m ping
+      #   working-directory: ${{ github.workspace }}/lab-kafka
 
       - name: Run Ansible Playbooks
         run: ansible-playbook ansible-playbooks/docker.yaml
