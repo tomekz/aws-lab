@@ -92,10 +92,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.5.2
 
-      - name: Display structure of downloaded files (pre)
-        run: ls -la
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
-
       - name: Download inventory file
         uses: actions/download-artifact@v3
         with:
@@ -106,17 +102,20 @@ jobs:
         run: unzip -o ansible_inventory_file | cat inventory.ini
         working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
-      - name: Display structure of downloaded files
-        run: ls -la
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
-
       - name: Install Ansible
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
+
+      - name: Configure known_hosts
+        run: ssh-keyscan 18.184.126.14 >> ~/.ssh/known_hosts
+
       - name: Run ansible ping
-        run: ansible all -m ping
+        run: |
+          cat ~/.ssh/known_hosts
+          ansible all -m ping
         working-directory: ${{ github.workspace }}/lab-kafka
+
       - name: Run Ansible Playbooks
         run: ansible-playbook ansible-playbooks/docker.yaml
         working-directory: ${{ github.workspace }}/lab-kafka
