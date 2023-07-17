@@ -11,4 +11,4 @@ node_3 ansible_host=${KAFKA_NODE_3_PRIVATE_IP}
 
 [kafka_nodes:vars]
 ansible_user=ec2-user
-ansible_ssh_common_args='-vvv -o StrictHostKeyChecking=no -o ProxyJump=ec2-user@${BASTION_HOST_PUBLIC_IP}'
+ansible_ssh_common_args='-o ProxyJump=ec2-user@${BASTION_HOST_PUBLIC_IP}'
