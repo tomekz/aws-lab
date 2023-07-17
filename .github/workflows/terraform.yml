@@ -108,7 +108,9 @@ jobs:
           sudo apt-get install -y ansible
 
       - name: Configure known_hosts
-        run: ssh-keyscan 18.184.126.14 >> ~/.ssh/known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 18.184.126.14 >> ~/.ssh/known_hosts
 
       - name: Run ansible ping
         run: |
