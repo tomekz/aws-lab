@@ -86,14 +86,11 @@ jobs:
   ansible:
     runs-on: ubuntu-latest
     needs: terraform
+    if: ${{ inputs.tfpath && inputs.destroy != true }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3.5.2
-
-      - name: Display structure of downloaded files (pre)
-        run: ls -la
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
       - name: Download inventory file
         uses: actions/download-artifact@v3
@@ -101,12 +98,8 @@ jobs:
           name: ansible_inventory_file
           path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
-      - name: see inventory
+      - name: unzip inventory file
         run: unzip -o ansible_inventory_file | cat inventory.ini
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
-
-      - name: Display structure of downloaded files
-        run: ls -la
         working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
       - name: Install Ansible
@@ -115,7 +108,5 @@ jobs:
           sudo apt-get install -y ansible
 
       - name: Run Ansible Playbooks
-        run: ansible-playbook -i ansible-aws-inventory/inventory.ini ansible-playbooks/docker.yaml
+        run: ansible-playbook ansible-playbooks/docker.yaml
         working-directory: ${{ github.workspace }}/lab-kafka
-
-
