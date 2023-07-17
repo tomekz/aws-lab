@@ -114,6 +114,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
+      - name: Run ansible ping
+        run: ansible all -m ping
+        working-directory: ${{ github.workspace }}/lab-kafka
       - name: Run Ansible Playbooks
-        run: ansible-playbook -i ansible-aws-inventory/inventory.ini ansible-playbooks/docker.yaml
+        run: ansible-playbook ansible-playbooks/docker.yaml
         working-directory: ${{ github.workspace }}/lab-kafka
