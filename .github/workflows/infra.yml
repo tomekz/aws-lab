@@ -116,6 +116,6 @@ jobs:
 
       - name: Run Ansible Playbooks
         run: |
-          ansible-playbook docker-setup.yml
-          ansible-playbook kafka-setup.yml
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-playbooks
+          ansible-playbook ansible-playbooks/docker-setup.yml
+          ansible-playbook ansible-playbooks/kafka-setup.yml
+        working-directory: ${{ github.workspace }}/lab-kafka
