@@ -14,11 +14,6 @@ on:
         type: boolean
         required: true
         default: false
-  # push:
-  #   branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
-
 jobs:
   terraform:
     name: Terraform plan & apply
@@ -118,13 +113,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
-
-      - name: Run ansible ping
-        run: |
-          cat ~/.ssh/known_hosts
-          cat ~/.ssh/id_rsa
-          ansible all -m ping
-        working-directory: ${{ github.workspace }}/lab-kafka
 
       - name: Run Ansible Playbooks
         run: ansible-playbook ansible-playbooks/docker.yaml

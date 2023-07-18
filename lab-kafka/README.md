@@ -2,9 +2,9 @@
 The lab environment will host a Kafka cluster of three nodes using Amazon EC2 instances.
 Nodes will be running inside self managed docker containers.
 
-Another set of EC2 instances will host go microservices that will produce and consume messages from the Kafka cluster
+Another EC2 instance will host go microservices that will produce and consume messages from the Kafka cluster
 
-The entire infrastructure will be deployed using terraform and ansible and the deployment
+The entire infrastructure will be provisioned using terraform and ansible and the deployment
 automation will be done using Github actions
 
 The deployment architecture will be as follows:
@@ -13,34 +13,35 @@ The deployment architecture will be as follows:
 
 The lab will allow me to learn and practice the following:
 
-* [X] Set up the EC2 cluster for kafka deployment:
+* [X] Set up CI pipeline for infrastructure provisioning and deployment:
+  - [X] Use Terraform to provision the AWS infrastructure
+  - [X] Use Ansible to configure the EC2 instances and deploy the microservices.
+  - [X] Use GitHub Actions to automate the CI pipeline.
+* [X] Set up classic three tier AWS architecture:
   - [X] Setup private and public subnets with bastion host in public subnet and kafka nodes in private subnet
   - [X] Provision EC2 instances based Amazon Linux 2 AMI.
   - [X] Ensure that the instances have appropriate security groups, and network settings:
-      - [X] allow inbound and outbound traffic for Kafka ports (e.g., 9092) only between the EC2 instances within the cluster.
+      - [X] allow inbound and outbound traffic for Kafka ports (e.g., 9092) only between the EC2 instances within the private subnet.
       - [X] allow inbound traffic for SSH from the bastion host only.
+* [X] Set up Kafka cluster:
   - [X] Install docker & docker-compose on each EC2 instance to facilitate containerization.
   - [X] Install other tools like `netcat` and `jq` to facilitate testing and debugging.
-* [X] Set up Kafka on the EC2 cluster:
   - [X] Install Kafka on all EC2 instances within the cluster. 
        - [X] Use [bitnami](https://github.com/bitnami) docker images that run in user mode and do not require root privileges.(in particular user ID 1001)
        - [X] Create a docker-compose.yml files for each cluster node. These files will define the services and configurations for the Kafka cluster.
-       - [X] To allow Kafka and ZooKeeper to persist files on the host filesystem, we need to map two directories from the host to the Docker containers: **volumes: - ./data/kafka:/bitnami/kafka ./data/zookeeper:/bitnami/zookeeper**
-       - [X] change the ownerships of the two directories, granting the container processes the permissions to read and write.**sudo chown 1001.1001 /data/zookeeper/ sudo chown 1001.1001 /data/kafka/**
        - [X] Configure Kafka and ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
        - [X] Install ZooKeeper on first EC2 instance only and colocate it with Kafka broker running already on the same server. (cost optimization, not a best practice)
 * [ ] Build Docker images for each microservice:
-  - [ ] For each microservice (User Service, Email Service, Notification Service, and Feed Service), create a Dockerfile that defines the container image.
-  - [ ] Use the appropriate base image for Go applications and specify the necessary dependencies and build instructions.
+  - [X] For each microservice create a Dockerfile that defines the container image.
+  - [ ] Use appropriate base image for Go applications and specify the necessary dependencies and build instructions.
   - [ ] Build the Docker image for each microservice using a command like docker build -t <image-name> ..
 * [ ] Deploy microservices on the EC2 cluster:
-  - [ ] Create deployment scripts or use an orchestration tool like Docker Swarm or Kubernetes to manage the deployment process
+  - [ ] Create deployment scripts
   - [ ] Launch containers for each microservice on the EC2 instances using the Docker images built earlier.
   - [ ] Configure the microservices to connect to the appropriate Kafka broker(s) and subscribe to the relevant topics.
 * [ ] Set up load balancing and networking:
   - [ ] Configure a load balancer (e.g., Elastic Load Balancer) to distribute incoming traffic across the EC2 instances running the microservices.
   - [ ] Ensure that the load balancer is properly configured to handle the gRPC communication ports for each microservice.
-* [ ] Configure security:
 * [ ] Apply security best practices to secure the EC2 instances, including using security groups to control inbound and outbound traffic, configuring SSL/TLS for gRPC communication, and securing access to Kafka and other services.
 * [ ] Monitor and scale:
   - [ ] Implement monitoring and logging mechanisms to track the health and performance of the deployed system. Use tools like CloudWatch, Prometheus, or ELK stack for monitoring and log analysis.
@@ -129,6 +130,7 @@ Host node-2
   User ec2-user
   ProxyJump bastion
 ```
+
 * run `ansible` commands to provision Kafka cluster
   - see the inventory graph
     - `ansible-inventory --graph`
@@ -140,6 +142,13 @@ Host node-2
     - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=2"` - provision kafka node 2
     - `ansible-playbook ansible-playbooks/kafka-setup.yaml --extra-vars "node_number=3"` - provision kafka node 3
 
-alternatively you can run `make ansible` to run all playbooks at once
-
   - check if it's working and both kafka nodes can communicate: `docker run --tty confluentinc/cp-kafkacat kafkacat -b <kafka-node-private-ip>:9092 -L` (you need to run this command from a kafka node)
+
+## CI/CD
+
+The entire process described above was automated
+The project uses GitHub Actions for CI/CD. The pipeline is defined in `.github/workflows/infra.yaml` file.
+The pipeline is triggered manually from GitHub UI. It consists of 2 main stages:
+- `terraform` - runs terraform commands to provision AWS infrastructure
+- `ansible` - runs ansible playbooks to install docker and provision kafka cluster
+

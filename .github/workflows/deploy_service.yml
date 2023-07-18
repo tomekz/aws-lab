@@ -1,4 +1,4 @@
-name: Dockerize hello-service
+name: Deploy hello-service
 
 on:
   push:
