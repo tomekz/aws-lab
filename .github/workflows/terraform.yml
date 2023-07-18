@@ -18,10 +18,10 @@ on:
         type: boolean
         required: true
         default: false
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
 
 jobs:
   terraform:
