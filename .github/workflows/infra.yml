@@ -61,7 +61,14 @@ jobs:
         make apply
       working-directory: ${{ github.event.inputs.tfpath }}
 
-    - name: Upload artifacts
+    - name: Upload env file
+      if: ${{ inputs.tfpath && inputs.destroy != true }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: env_file
+        path: ${{ github.workspace }}/lab-kafka/ansible-playbooks/.env
+
+    - name: Upload inventory file
       if: ${{ inputs.tfpath && inputs.destroy != true }}
       uses: actions/upload-artifact@v3
       with:
@@ -83,21 +90,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.5.2
 
+      - name: Download .env file
+        uses: actions/download-artifact@v3
+        with:
+          name: env_file
+          path: ${{ github.workspace }}/lab-kafka/ansible-playbooks
+            
       - name: Download inventory file
         uses: actions/download-artifact@v3
         with:
           name: ansible_inventory_file
           path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
+      - name: See env file
+        run: |
+          unzip -o env_file | cat .env
+        working-directory: ${{ github.workspace }}/lab-kafka/ansible-playbooks
+
       - name: See inventory
-        run: unzip -o ansible_inventory_file | cat inventory.ini
+        run: |
+          unzip -o ansible_inventory_file | cat inventory.ini
         working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
       - name: Extract bastion_host IP address
         id: extract_bastion_ip
         run: |
-          ls lab-kafka/ansible-playbooks
-          cat lab-kafka/ansible-playbooks/.env
           bastion_ip=$(grep 'bastion_host ansible_host=' lab-kafka/ansible-aws-inventory/inventory.ini | awk -F '=' '{print $2}')
           echo "Bastion Host IP: $bastion_ip"
           echo "::set-output name=bastion_ip::$bastion_ip"
