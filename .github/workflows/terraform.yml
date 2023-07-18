@@ -1,4 +1,4 @@
-name: Terraform AWS Workflow
+name: Terraform and Ansible Workflow
 
 on:
   workflow_call:
@@ -7,11 +7,8 @@ on:
     inputs:
       tfpath:
         description: 'terraform source dir'
-        required: true
+        required: false
         default: 'lab-kafka/terraform'
-      public_key:
-        description: 'ssh public key that will be used to connect to EC2 instances'
-        required: true
       skip_terraform:
         description: 'When TRUE terraform job will be skipped'
         type: boolean
@@ -30,7 +27,7 @@ jobs:
   terraform:
     name: Terraform plan & apply
     runs-on: ubuntu-latest
-    if:  ${{ inputs.tfpath && inputs.skip_terraform != true }} 
+    if: ${{ inputs.skip_terraform != true }} 
     steps:
     - name: Checkout tf code in runner environment
       uses: actions/checkout@v3.5.2
@@ -50,7 +47,7 @@ jobs:
 
     - name: Terraform init
       env:
-          TF_VAR_public_key: ${{ github.event.inputs.public_key }}
+          TF_VAR_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
       run: |
         echo `pwd`
         echo "tfpath ${{ github.event.inputs.tfpath }}"
@@ -63,8 +60,8 @@ jobs:
 
     - name: Terraform plan and apply
       env:
-          TF_VAR_public_key: ${{ github.event.inputs.public_key }}
-      if: ${{ inputs.tfpath && inputs.destroy != true }}
+          TF_VAR_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+      if: ${{ inputs.destroy != true }}
       run: |
         echo `pwd`
         echo "tfpath ${{ github.event.inputs.tfpath }}"        
@@ -87,11 +84,11 @@ jobs:
         echo "** Running Terraform Destroy**"
         make destroy
       working-directory: ${{ github.event.inputs.tfpath }}
+
   ansible:
     runs-on: ubuntu-latest
     needs: terraform
-    if: ${{ inputs.tfpath && inputs.destroy != true }}
-
+    if: ${{ inputs.destroy != true }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3.5.2
@@ -102,23 +99,35 @@ jobs:
           name: ansible_inventory_file
           path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
 
-      - name: see inventory
+      - name: See inventory
         run: unzip -o ansible_inventory_file | cat inventory.ini
         working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
+
+      - name: Extract bastion_host IP address
+        id: extract_bastion_ip
+        run: |
+          bastion_ip=$(grep 'bastion_host ansible_host=' file_to_parse | awk -F '=' '{print $2}')
+          echo "Bastion Host IP: $bastion_ip"
+          echo "::set-output name=bastion_ip::$bastion_ip"
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ steps.extract_bastion_ip.outputs.bastion_ip }} >> ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Install Ansible
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
 
-      - name: Configure known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H 18.184.126.14 >> ~/.ssh/known_hosts
-
       - name: Run ansible ping
         run: |
           cat ~/.ssh/known_hosts
+          cat ~/.ssh/id_rsa
           ansible all -m ping
         working-directory: ${{ github.workspace }}/lab-kafka
 
