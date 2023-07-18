@@ -5,4 +5,3 @@ It contains a set of labs that can be used to learn about AWS services and how t
 The labs can be run independently if desired.
 
 * [Lab Kafka](lab-kafka/README.md)
-* [Lab Jenkis](lab-jenkins/README.md)
