@@ -146,7 +146,7 @@ Host node-2
 
 ## CI/CD
 
-The entire process described above was automated
+The entire process described above was automated.
 The project uses GitHub Actions for CI/CD. The pipeline is defined in `.github/workflows/infra.yaml` file.
 The pipeline is triggered manually from GitHub UI. It consists of 2 main stages:
 - `terraform` - runs terraform commands to provision AWS infrastructure

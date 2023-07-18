@@ -115,5 +115,7 @@ jobs:
           sudo apt-get install -y ansible
 
       - name: Run Ansible Playbooks
-        run: ansible-playbook ansible-playbooks/docker.yaml
-        working-directory: ${{ github.workspace }}/lab-kafka
+        run: |
+          ansible-playbook docker-setup.yaml
+          ansible-playbook kafka-setup.yaml
+        working-directory: ${{ github.workspace }}/lab-kafka/ansible-playbooks
