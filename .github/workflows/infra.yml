@@ -96,6 +96,8 @@ jobs:
       - name: Extract bastion_host IP address
         id: extract_bastion_ip
         run: |
+          ls lab-kafka/ansible-playbooks
+          cat lab-kafka/ansible-playbooks/.env
           bastion_ip=$(grep 'bastion_host ansible_host=' lab-kafka/ansible-aws-inventory/inventory.ini | awk -F '=' '{print $2}')
           echo "Bastion Host IP: $bastion_ip"
           echo "::set-output name=bastion_ip::$bastion_ip"
