@@ -9,10 +9,6 @@ on:
         description: 'terraform source dir'
         required: false
         default: 'lab-kafka/terraform'
-      skip_terraform:
-        description: 'When TRUE terraform job will be skipped'
-        type: boolean
-        default: false
       destroy:
         description: 'When TRUE the destroy will be fired instead of apply'
         type: boolean
@@ -27,7 +23,6 @@ jobs:
   terraform:
     name: Terraform plan & apply
     runs-on: ubuntu-latest
-    if: ${{ inputs.skip_terraform != true }} 
     steps:
     - name: Checkout tf code in runner environment
       uses: actions/checkout@v3.5.2
@@ -88,6 +83,7 @@ jobs:
   ansible:
     runs-on: ubuntu-latest
     if: ${{ inputs.destroy != true }}
+    needs: terraform
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3.5.2
