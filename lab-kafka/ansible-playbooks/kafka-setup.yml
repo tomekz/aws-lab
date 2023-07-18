@@ -35,14 +35,6 @@
       name: urllib3
       state: present
       version: 1.26.6
-  - name: Install docker library
-    pip:
-      name: docker
-      state: present
-  - name: Install docker-compose library
-    pip:
-      name: docker-compose
-      state: present
   - name: copy .env file
     copy:
       src: .env
