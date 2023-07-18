@@ -87,7 +87,6 @@ jobs:
 
   ansible:
     runs-on: ubuntu-latest
-    needs: terraform
     if: ${{ inputs.destroy != true }}
     steps:
       - name: Checkout repository
