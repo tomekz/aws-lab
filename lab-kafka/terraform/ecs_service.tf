@@ -67,6 +67,7 @@ resource "aws_ecs_service" "lab-kafka-ecs-service" {
 
 resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
   family                   = "service"
+  network_mode             = "awsvpc"
   cpu = "256"
   memory = "512"
   container_definitions    = <<TASK_DEF
