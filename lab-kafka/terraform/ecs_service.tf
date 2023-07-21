@@ -47,6 +47,7 @@ resource "aws_ecs_service" "lab-kafka-ecs-service" {
   scheduling_strategy  = "REPLICA"
   desired_count        = 1
   force_new_deployment = true
+  launch_type          = "FARGATE"
   tags = merge(local.tags, { "Name" = "lab-kafka-ecs-service" })
   task_definition = aws_ecs_task_definition.lab_kafka_service_task_definition.arn
   network_configuration {
@@ -70,6 +71,7 @@ resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
   network_mode             = "awsvpc"
   cpu = "256"
   memory = "512"
+  requires_compatibilities = ["FARGATE"]
   container_definitions    = <<TASK_DEF
   [
     {
