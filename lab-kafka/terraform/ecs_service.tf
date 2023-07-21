@@ -78,7 +78,7 @@ resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
   [
     {
     "name": "hello-service", 
-    "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:latest", 
+    "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:v0.0.1", 
     "portMappings": [
         {
             "containerPort": 3000, 
