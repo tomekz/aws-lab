@@ -72,6 +72,8 @@ resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
   cpu = "256"
   memory = "512"
   requires_compatibilities = ["FARGATE"]
+  execution_role_arn       = aws_iam_role.ecs-task-execution-role.arn
+  task_role_arn            = aws_iam_role.ecs-task-execution-role.arn
   container_definitions    = <<TASK_DEF
   [
     {
