@@ -36,8 +36,8 @@ resource "aws_subnet" "public_2" {
   vpc_id            = aws_vpc.main.id
   map_public_ip_on_launch = true
   cidr_block        = "10.0.3.0/24"
-  availability_zone = element(data.aws_availability_zones.azs.names, 0)
-  tags              = merge(local.tags, { "Name" = "aws-lab-kafka-public-1" })
+  availability_zone = element(data.aws_availability_zones.azs.names, 1)
+  tags              = merge(local.tags, { "Name" = "aws-lab-kafka-public-2" })
 }
 
 resource "aws_subnet" "private_1" {

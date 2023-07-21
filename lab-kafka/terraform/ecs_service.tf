@@ -44,7 +44,7 @@ resource "aws_security_group" "service_security_group" {
 resource "aws_ecs_service" "lab-kafka-ecs-service" {
   name            = "lab-kafka-ecs-service"
   cluster         = aws_ecs_cluster.lab_kafka_ecs_cluster.id
-  launch_type          = "FARGATE"
+  # launch_type = "FARGATE" # TODO - find out why this is unsupported
   scheduling_strategy  = "REPLICA"
   desired_count        = 1
   force_new_deployment = true
