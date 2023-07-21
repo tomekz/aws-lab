@@ -2,7 +2,7 @@ resource "aws_alb" "application_load_balancer" {
   name               = "lab-kafka-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [ aws_subnet.public_1.id ]
+  subnets            = [aws_subnet.public_1.id, aws_subnet.public_2.id]
   security_groups    = [aws_security_group.load_balancer_security_group.id]
   tags = merge(local.tags, { "Name" = "lab-kafka-alb" })
 }

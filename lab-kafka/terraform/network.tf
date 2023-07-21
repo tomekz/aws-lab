@@ -32,6 +32,14 @@ resource "aws_subnet" "public_1" {
   tags              = merge(local.tags, { "Name" = "aws-lab-kafka-public-1" })
 }
 
+resource "aws_subnet" "public_2" {
+  vpc_id            = aws_vpc.main.id
+  map_public_ip_on_launch = true
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = element(data.aws_availability_zones.azs.names, 0)
+  tags              = merge(local.tags, { "Name" = "aws-lab-kafka-public-1" })
+}
+
 resource "aws_subnet" "private_1" {
   vpc_id            = aws_vpc.main.id
   map_public_ip_on_launch = true
@@ -69,6 +77,11 @@ resource "aws_route_table_association" "private_association" {
 
 resource "aws_route_table_association" "set-master-default-rt-assoc" {
   subnet_id         = aws_subnet.public_1.id
+  route_table_id = aws_route_table.internet_route.id
+}
+
+resource "aws_route_table_association" "set-master-default-rt-assoc-2" {
+  subnet_id         = aws_subnet.public_2.id
   route_table_id = aws_route_table.internet_route.id
 }
 
