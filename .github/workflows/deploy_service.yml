@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  ECS_SERVICE: lab-kafka-ecs-service
+  ECS_CLUSTER: lab-kafka-ecs-cluster
+  ECS_TASK_DEFINITION: lab-kafka/service/deploy/ecs_task.json
+  CONTAINER_NAME: hello-service
+
 jobs:
 
   build:
@@ -19,10 +25,6 @@ jobs:
     - uses: rickstaa/action-get-semver@v1
       id: get_semver
 
-    # - name: Build the Docker image
-    #   working-directory: lab-kafka/service
-    #   run: docker build . --file Dockerfile --tag hello-service:${{ steps.get_semver.outputs.current_version  }}
-
     - name: Configure AWS Credentials Action For GitHub Actions
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -35,6 +37,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push docker image to Amazon ECR
+      id: build-image
       working-directory: lab-kafka/service
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -43,3 +46,20 @@ jobs:
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: ${{ steps.build-image.outputs.image }}
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
