@@ -19,6 +19,7 @@
         packages:
         - docker
         - nc
+        - jq
     - name: Enable Some packages from amazon-linux-extras packages
       shell: "amazon-linux-extras enable docker"
     - name: Enable Docker CE service at startup
