@@ -18,8 +18,28 @@ jobs:
           fetch-depth: 0
     - uses: rickstaa/action-get-semver@v1
       id: get_semver
+
+    # - name: Build the Docker image
+    #   working-directory: lab-kafka/service
+    #   run: docker build . --file Dockerfile --tag hello-service:${{ steps.get_semver.outputs.current_version  }}
+
+    - name: Configure AWS Credentials Action For GitHub Actions
+      uses: aws-actions/configure-aws-credentials@v2
       with:
-       bump_level: "minor"
-    - name: Build the Docker image
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push docker image to Amazon ECR
       working-directory: lab-kafka/service
-      run: docker build . --file Dockerfile --tag hello-service:${{ steps.get_semver.outputs.current_version  }}
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: lab-kafka-ecr
+        IMAGE_TAG: ${{ steps.get_semver.outputs.current_version }}
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
