@@ -60,8 +60,8 @@ resource "aws_ecs_service" "lab-kafka-ecs-service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = "lab-kafka-esc-service-container"
-    container_port   = 8080
+    container_name   = "hello-service"
+    container_port   = 3000
   }
 }
 
@@ -76,8 +76,8 @@ resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
     "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:latest", 
     "portMappings": [
         {
-            "containerPort": 80, 
-            "hostPort": 80, 
+            "containerPort": 3000, 
+            "hostPort": 3000, 
             "protocol": "tcp"
         }
     ], 
