@@ -2,7 +2,7 @@
 The lab environment will host a Kafka cluster of three nodes using Amazon EC2 instances.
 Nodes will be running inside self managed docker containers.
 
-Another EC2 instance will host go microservices that will produce and consume messages from the Kafka cluster
+In the same private subnet an ECS cluster will host microservices that will produce and consume messages from the Kafka cluster
 
 The entire infrastructure will be provisioned using terraform and ansible and the deployment
 automation will be done using Github actions
@@ -15,11 +15,13 @@ The lab will allow me to learn and practice the following:
 
 * [X] Set up CI pipeline for infrastructure provisioning and deployment:
   - [X] Use Terraform to provision the AWS infrastructure
-  - [X] Use Ansible to configure the EC2 instances and deploy the microservices.
+  - [X] Use Ansible to configure the EC2 instances
   - [X] Use GitHub Actions to automate the CI pipeline.
 * [X] Set up classic three tier AWS architecture:
-  - [X] Setup private and public subnets with bastion host in public subnet and kafka nodes in private subnet
+  - [X] Setup private and public subnets with bastion host in public subnet and kafka nodes and ECS cluster in private subnet
   - [X] Provision EC2 instances based Amazon Linux 2 AMI.
+  - [X] Provision ECS cluster for hosting containerized microservices.
+  - [X] Setup ALB for load balancing and routing traffic to ECS cluster.
   - [X] Ensure that the instances have appropriate security groups, and network settings:
       - [X] allow inbound and outbound traffic for Kafka ports (e.g., 9092) only between the EC2 instances within the private subnet.
       - [X] allow inbound traffic for SSH from the bastion host only.
@@ -31,21 +33,20 @@ The lab will allow me to learn and practice the following:
        - [X] Create a docker-compose.yml files for each cluster node. These files will define the services and configurations for the Kafka cluster.
        - [X] Configure Kafka and ensure that the Kafka instances have sufficient resources and are properly networked within the EC2 cluster.
        - [X] Install ZooKeeper on first EC2 instance only and colocate it with Kafka broker running already on the same server. (cost optimization, not a best practice)
-* [ ] Build Docker images for each microservice:
+* [X] Set up ECS cluster:
   - [X] For each microservice create a Dockerfile that defines the container image.
-  - [ ] Use appropriate base image for Go applications and specify the necessary dependencies and build instructions.
-  - [ ] Build the Docker image for each microservice using a command like docker build -t <image-name> ..
-* [ ] Deploy microservices on the EC2 cluster:
-  - [ ] Create deployment scripts
-  - [ ] Launch containers for each microservice on the EC2 instances using the Docker images built earlier.
-  - [ ] Configure the microservices to connect to the appropriate Kafka broker(s) and subscribe to the relevant topics.
-* [ ] Set up load balancing and networking:
-  - [ ] Configure a load balancer (e.g., Elastic Load Balancer) to distribute incoming traffic across the EC2 instances running the microservices.
+  - [X] Use appropriate base image for Go applications and specify the necessary dependencies and build instructions.
+  - [X] Create ECS service and task definition for each microservice.
+  - [X] Build the Docker image for each microservice using a command like docker build -t <image-name> ..
+  - [X] Deploy microservices on the ECS cluster:
+  - [X] Configure the microservices to connect to the appropriate Kafka broker(s) and subscribe to the relevant topics.
+* [o] Set up load balancing and networking:
+  - [X] Configure an applications load balancer to distribute incoming traffic across the ECS instances running the microservices.
   - [ ] Ensure that the load balancer is properly configured to handle the gRPC communication ports for each microservice.
-* [ ] Apply security best practices to secure the EC2 instances, including using security groups to control inbound and outbound traffic, configuring SSL/TLS for gRPC communication, and securing access to Kafka and other services.
+* [X] Apply security best practices to secure the EC2 instances, including using security groups to control inbound and outbound traffic, configuring SSL/TLS for gRPC communication, and securing access to Kafka and other services.
 * [ ] Monitor and scale:
   - [ ] Implement monitoring and logging mechanisms to track the health and performance of the deployed system. Use tools like CloudWatch, Prometheus, or ELK stack for monitoring and log analysis.
-  - [ ] Set up autoscaling policies to automatically scale the EC2 cluster based on resource utilization or other metrics.
+  - [ ] Set up autoscaling policies to automatically scale the ECS cluster based on resource utilization or other metrics.
 
 ## How to run
 
