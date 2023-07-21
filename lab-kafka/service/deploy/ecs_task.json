@@ -20,5 +20,6 @@
     ], 
     "cpu": "256", 
     "memory": "512",
-    "execution_role_arn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role"
+    "executionRoleArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role",
+    "taskDefinitionArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role"
 }
