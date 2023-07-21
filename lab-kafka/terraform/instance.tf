@@ -40,10 +40,10 @@ resource "aws_security_group" "kafka-node-sg" {
   description = "Allow TCP/22"
   vpc_id      = aws_vpc.main.id
   ingress {
-    description = "Allow ssh from the bastion host"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    description     = "Allow ssh from the bastion host"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = [aws_security_group.bastion-host-sg.id]
   }
   # this will have to go via load balancer
@@ -110,7 +110,7 @@ resource "aws_instance" "kafka-node-1" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
-  user_data     = <<-EOF
+  user_data                   = <<-EOF
     #!/bin/bash
     echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
     chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys
@@ -129,7 +129,7 @@ resource "aws_instance" "kafka-node-2" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
-  user_data     = <<-EOF
+  user_data                   = <<-EOF
     #!/bin/bash
     echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
     chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys
@@ -148,7 +148,7 @@ resource "aws_instance" "kafka-node-3" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
-  user_data     = <<-EOF
+  user_data                   = <<-EOF
     #!/bin/bash
     echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
     chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys

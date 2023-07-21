@@ -1,32 +1,32 @@
 {
-    "family": "service", 
-    "networkMode": "awsvpc", 
-    "cpu": "256", 
-    "memory": "512",
-    "executionRoleArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role",
-    "containerDefinitions": [
+  "family": "service",
+  "networkMode": "awsvpc",
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role",
+  "containerDefinitions": [
+    {
+      "name": "hello-service",
+      "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:v0.0.1",
+      "portMappings": [
         {
-            "name": "hello-service", 
-            "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:v0.0.1", 
-            "portMappings": [
-                {
-                    "containerPort": 3000, 
-                    "hostPort": 3000, 
-                    "protocol": "tcp"
-                }
-            ], 
-            "essential": true
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
         }
-    ], 
-    "requiresCompatibilities": [
-        "FARGATE"
-    ], 
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "lab-kafka-ecs-service-logs",
-        "awslogs-region": "eu-central-1",
-        "awslogs-stream-prefix": "hello-service"
+      ],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "lab-kafka-ecs-service-logs",
+          "awslogs-region": "eu-central-1",
+          "awslogs-stream-prefix": "hello-service"
+        }
       }
     }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ]
 }

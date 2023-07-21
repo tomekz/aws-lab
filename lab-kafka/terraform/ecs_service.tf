@@ -17,7 +17,7 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role_policy" {
 resource "aws_iam_role" "ecs-task-execution-role" {
   name               = "lab-kafka-ecs-service-execution-task-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-  tags = merge(local.tags, { "Name" = "lab-kafka-ecs-iam-role" })
+  tags               = merge(local.tags, { "Name" = "lab-kafka-ecs-iam-role" })
 }
 
 resource "aws_security_group" "service_security_group" {
@@ -42,14 +42,14 @@ resource "aws_security_group" "service_security_group" {
 }
 
 resource "aws_ecs_service" "lab-kafka-ecs-service" {
-  name            = "lab-kafka-ecs-service"
-  cluster         = aws_ecs_cluster.lab_kafka_ecs_cluster.id
+  name                 = "lab-kafka-ecs-service"
+  cluster              = aws_ecs_cluster.lab_kafka_ecs_cluster.id
   scheduling_strategy  = "REPLICA"
   desired_count        = 1
   force_new_deployment = true
   launch_type          = "FARGATE"
-  tags = merge(local.tags, { "Name" = "lab-kafka-ecs-service" })
-  task_definition = aws_ecs_task_definition.lab_kafka_service_task_definition.arn
+  tags                 = merge(local.tags, { "Name" = "lab-kafka-ecs-service" })
+  task_definition      = aws_ecs_task_definition.lab_kafka_service_task_definition.arn
   network_configuration {
     subnets = [aws_subnet.private_1.id]
     # assign_public_ip = false
@@ -69,8 +69,8 @@ resource "aws_ecs_service" "lab-kafka-ecs-service" {
 resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
   family                   = "service"
   network_mode             = "awsvpc"
-  cpu = "256"
-  memory = "512"
+  cpu                      = "256"
+  memory                   = "512"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs-task-execution-role.arn
   task_role_arn            = aws_iam_role.ecs-task-execution-role.arn
