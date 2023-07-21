@@ -1,6 +1,9 @@
 {
     "family": "service", 
     "networkMode": "awsvpc", 
+    "cpu": "256", 
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role",
     "containerDefinitions": [
         {
             "name": "hello-service", 
@@ -18,7 +21,12 @@
     "requiresCompatibilities": [
         "FARGATE"
     ], 
-    "cpu": "256", 
-    "memory": "512",
-    "executionRoleArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role"
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "lab-kafka-ecs-service-logs",
+        "awslogs-region": "eu-central-1",
+        "awslogs-stream-prefix": "hello-service"
+      }
+    }
 }
