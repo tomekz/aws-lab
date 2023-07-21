@@ -153,3 +153,5 @@ The pipeline is triggered manually from GitHub UI. It consists of 2 main stages:
 - `terraform` - runs terraform commands to provision AWS infrastructure
 - `ansible` - runs ansible playbooks to install docker and provision kafka cluster
 
+Additional pipeline `.github/workflows/deploy_service.yaml` file is triggered automatically on every push to `main` branch.
+It builds docker image and pushes it to AWS ECR repository. Then it deploys the image to ECS cluster.
