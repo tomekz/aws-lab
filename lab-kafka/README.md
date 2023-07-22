@@ -154,5 +154,5 @@ The pipeline is triggered manually from GitHub UI. It consists of 2 main stages:
 - `ansible` - runs ansible playbooks to install docker and provision kafka cluster
 `destroy` input parameter is used to destroy the infrastructure. If it's set to `true` then the pipeline will destroy the infrastructure instead of creating it.
 
-Additional pipeline `.github/workflows/deploy_service.yaml` file is triggered automatically on every push to `main` branch.
+Additional pipeline `.github/workflows/deploy_service.yaml` is triggered automatically on every push to `main` branch.
 It builds docker image and pushes it to AWS ECR repository. Then it deploys the image to ECS cluster.
