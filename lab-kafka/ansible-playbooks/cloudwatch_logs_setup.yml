@@ -5,7 +5,7 @@
   remote_user: ec2-user
   vars:
     cloudwatch_logs:
-      - log_file_path: /var/log/kafka
+      - log_file_path: /var/log/kafka/server.log
         log_group_name: kafka_broker_logs
 
   tasks:
