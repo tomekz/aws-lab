@@ -9,6 +9,7 @@ services:
       - '2888:2888'
       - '3888:3888'
     volumes:
+      - '/var/log/kafka:/opt/bitnami/kafka/logs'
       - '/data/zookeeper:/bitnami'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
