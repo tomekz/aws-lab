@@ -23,6 +23,13 @@
       owner: 1001
       group: 1001
       mode: 0775
+  - name: Create /var/log/kafka volume dir and setup permissions
+    file:
+      path: /var/log/kafka
+      state: directory
+      owner: 1001
+      group: 1001
+      mode: 0775
   - name: Copy `kafka/docker-compose-node-<node_number>.yaml` docker-compose file
     copy:
       src: "kafka/docker-compose-node-{{ node_number }}.yaml"

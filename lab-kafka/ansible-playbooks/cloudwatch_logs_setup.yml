@@ -1,0 +1,27 @@
+---
+- name: "Install and Configure CloudWatch Logs Agent"
+  hosts: kafka_nodes
+  become: true
+  remote_user: ec2-user
+  vars:
+    cloudwatch_logs:
+      - log_file_path: /var/log/kafka
+        log_group_name: kafka_broker_logs
+
+  tasks:
+    - name: Install the CloudWatch Logs Agent package
+      package:
+        name: awslogs
+        state: present
+      become: true
+    - name: Configure CloudWatch Logs Agent
+      template:
+        src: awslogs.conf.j2
+        dest: /etc/awslogs/awslogs.conf
+      notify: restart awslogs
+
+  handlers:
+    - name: restart awslogs
+      service:
+        name: awslogsd
+        state: restarted

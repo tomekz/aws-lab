@@ -1,0 +1,12 @@
+[general]
+state_file = /var/lib/awslogs/agent-state
+
+{% for log in cloudwatch_logs %}
+[{{ log.log_group_name }}]
+datetime_format = %b %d %H:%M:%S
+file = {{ log.log_file_path }}
+buffer_duration = 5000
+log_stream_name = {instance_id}/{{ log.log_file_path }}
+initial_position = start_of_file
+log_group_name = /ec2/{{ log.log_group_name }}
+{% endfor %}
