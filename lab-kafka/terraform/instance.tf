@@ -29,6 +29,11 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logs_policy_attachment" {
   role       = aws_iam_role.cloudwatch_logs_role.name
 }
 
+resource "aws_iam_instance_profile" "ec2_instance_profile" {
+  name = "EC2InstanceProfile"
+  role = aws_iam_role.cloudwatch_logs_role.name
+}
+
 resource "aws_security_group" "bastion-host-sg" {
   name        = "bastion-host-sg"
   description = "Allow TCP/22 from custom IPs"
@@ -123,7 +128,7 @@ resource "aws_instance" "kafka-node-1" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
-  iam_instance_profile        = aws_iam_role.cloudwatch_logs_role.name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   user_data                   = <<-EOF
     #!/bin/bash
     echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
@@ -143,7 +148,7 @@ resource "aws_instance" "kafka-node-2" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
-  iam_instance_profile        = aws_iam_role.cloudwatch_logs_role.name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   user_data                   = <<-EOF
     #!/bin/bash
     echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
@@ -163,7 +168,7 @@ resource "aws_instance" "kafka-node-3" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.kafka-node-sg.id]
   subnet_id                   = aws_subnet.private_1.id
-  iam_instance_profile        = aws_iam_role.cloudwatch_logs_role.name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   user_data                   = <<-EOF
     #!/bin/bash
     echo "${aws_key_pair.bastion-host-key-pair.public_key}" >> /home/ec2-user/.ssh/authorized_keys
