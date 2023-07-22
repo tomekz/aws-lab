@@ -8,7 +8,7 @@ resource "aws_key_pair" "bastion-host-key-pair" {
 }
 
 resource "aws_iam_role" "cloudwatch_logs_role" {
-  name = "EC2CloudWatchLogsRole"
+  name = "ec2-cloudwatch-logs-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
