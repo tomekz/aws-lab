@@ -35,10 +35,9 @@ docker run -it --network=host edenhill/kafkacat:1.5.0 -b 0.0.0.0:9093 -P -t <top
 
 In another terminal, to consume messages from a topic <topic>:
 ```
-docker run -it --network=host edenhill/kafkacat:1.5.0 -b 0.0.0.0:9093 -P -t <topic>
+docker run -it --network=host edenhill/kafkacat:1.5.0 -b 0.0.0.0:9093 -C -t <topic>
 ```
 
-```
 ## Testing kafka with kafka-ui
 
 If you don't want to use CLI tool, you can use kafka-ui. It is a web interface for kafka cluster management.
