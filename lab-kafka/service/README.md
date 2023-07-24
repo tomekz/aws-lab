@@ -20,7 +20,7 @@ docker-compose --profile clustered up
 
 start the service:
 ```
-go run .
+make run
 ```
 
 

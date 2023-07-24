@@ -23,7 +23,13 @@
           "awslogs-region": "eu-central-1",
           "awslogs-stream-prefix": "hello-service"
         }
-      }
+      },
+      "environment": [
+        {
+          "name": "KAFKA_BOOTSTRAP_SERVERS",
+          "value": "b-1.lab-kafka-ecs-cluster.4xqj2c.c4.kafka.eu-central-1.amazonaws.com:9092,b-2.lab-kafka-ecs-cluster.4xqj2c.c4.kafka.eu-central-1.amazonaws.com:9092,b-3.lab-kafka-ecs-cluster.4xqj2c.c4.kafka.eu-central-1.amazonaws.com:9092"
+        }
+      ]
     }
   ],
   "requiresCompatibilities": [
