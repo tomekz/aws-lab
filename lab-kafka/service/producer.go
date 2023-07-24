@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -41,4 +42,31 @@ func NewProducer() *kafka.Producer {
 	return p
 }
 
-var Producer = NewProducer()
+type OrderProducer struct {
+	producer *kafka.Producer
+	topic    string
+}
+
+type Order struct {
+	OrderID    string `json:"order_id"`
+	CustomerID string `json:"customer_id"`
+	Total      int    `json:"total"`
+}
+
+func (p *OrderProducer) Produce(order *Order) error {
+	orderJSON, err := json.Marshal(order)
+	if err != nil {
+		return err
+	}
+
+	return p.producer.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &p.topic, Partition: kafka.PartitionAny},
+		Value:          orderJSON,
+	}, nil)
+}
+
+// OrderProducer  
+var OProducer = &OrderProducer{
+	producer: NewProducer(),
+	topic:    "orders",
+}

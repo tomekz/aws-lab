@@ -27,7 +27,7 @@
       "environment": [
         {
           "name": "KAFKA_BOOTSTRAP_SERVERS",
-          "value": "b-1.lab-kafka-ecs-cluster.4xqj2c.c4.kafka.eu-central-1.amazonaws.com:9092,b-2.lab-kafka-ecs-cluster.4xqj2c.c4.kafka.eu-central-1.amazonaws.com:9092,b-3.lab-kafka-ecs-cluster.4xqj2c.c4.kafka.eu-central-1.amazonaws.com:9092"
+          "value": "10.0.2.63:9092,10.0.2.246:9092,10.0.2.190:9092"
         }
       ]
     }
