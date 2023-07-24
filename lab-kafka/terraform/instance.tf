@@ -64,14 +64,6 @@ resource "aws_security_group" "kafka-node-sg" {
     protocol        = "tcp"
     security_groups = [aws_security_group.bastion-host-sg.id]
   }
-  # this will have to go via load balancer
-  # ingress {
-  #   description = "Allow 9000 from our public IP"
-  #   from_port   = 9000
-  #   to_port     = 9000
-  #   protocol    = "tcp"
-  #   cidr_blocks = [var.external_ip]
-  # }
   ingress {
     description = "Allow 3888 between kafka nodes"
     from_port   = 3888
@@ -92,13 +84,16 @@ resource "aws_security_group" "kafka-node-sg" {
     to_port     = 2181
     protocol    = "tcp"
     self        = true
+    security_groups = [aws_security_group.bastion-host-sg.id]
+
   }
   ingress {
-    description = "Allow 9092 between kafka nodes"
+    description = "Allow 9092 from specified CIRD range"
     from_port   = 9092
     to_port     = 9092
     protocol    = "tcp"
     self        = true
+    cidr_blocks = ["10.0.2.0/24"]
   }
   egress {
     from_port   = 0
