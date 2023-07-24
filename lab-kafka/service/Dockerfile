@@ -1,8 +1,11 @@
-FROM golang as builder
-WORKDIR /app
-COPY . .
-RUN CGO_ENABLED=0 go build -o helloservice .
+FROM golang:latest
 
-FROM scratch
-COPY --from=builder /app/helloservice /
-CMD ["/helloservice"]
+WORKDIR /go/src/app
+
+COPY . .
+
+RUN go build -o app
+
+EXPOSE 3000
+
+CMD ["./app"]
