@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -53,16 +54,34 @@ type Order struct {
 	Total      int    `json:"total"`
 }
 
-func (p *OrderProducer) Produce(order *Order) error {
+func (p *OrderProducer) Produce(ctx context.Context, order *Order) error {
 	orderJSON, err := json.Marshal(order)
 	if err != nil {
 		return err
 	}
 
-	return p.producer.Produce(&kafka.Message{
+	//nolint:golint,errcheck
+	p.producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &p.topic, Partition: kafka.PartitionAny},
 		Value:          orderJSON,
 	}, nil)
+
+	select {
+	case ev := <-p.producer.Events():
+		switch e := ev.(type) {
+		case *kafka.Message:
+			if e.TopicPartition.Error != nil {
+				fmt.Printf("Delivery failed: %v\n", e.TopicPartition)
+				return e.TopicPartition.Error
+			} else {
+				fmt.Printf("Delivered message to %v\n", e.TopicPartition)
+			}
+		}
+	case <-ctx.Done():
+		fmt.Println("Context done")
+	}
+
+	return nil
 }
 
 // OrderProducer  

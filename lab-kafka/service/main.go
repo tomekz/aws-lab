@@ -8,6 +8,7 @@ func main() {
 
 	svc := NewLoggingService(NewMetricsService(&helloService{}))
 
+	defer OProducer.producer.Close()
 	server := NewJSONAPIServer(*listenAddr, svc)
 	server.Run()
 }

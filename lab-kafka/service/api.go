@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"time"
 
 	"service/types"
 )
@@ -35,8 +36,9 @@ func (s *JSONAPIServer) Run() {
 }
 
 func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	ctx = context.WithValue(ctx, "requestID", rand.Intn(10000000))
+	defer cancel()
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := apiFn(ctx, w, r); err != nil {

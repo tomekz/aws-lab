@@ -23,7 +23,7 @@ func (s *helloService) Hello(ctx context.Context, name string) (string, error) {
 	time.Sleep(time.Second * 1)
 
 	//nolint:golint,errcheck
-	OProducer.Produce(&Order{
+	OProducer.Produce(ctx, &Order{
 		OrderID:    "123",
 		CustomerID: name,
 		Total:      3000,
