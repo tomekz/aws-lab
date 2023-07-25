@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"service/types"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
@@ -48,13 +49,7 @@ type OrderProducer struct {
 	topic    string
 }
 
-type Order struct {
-	OrderID    string `json:"order_id"`
-	CustomerID string `json:"customer_id"`
-	Total      int    `json:"total"`
-}
-
-func (p *OrderProducer) Produce(ctx context.Context, order *Order) error {
+func (p *OrderProducer) Produce(ctx context.Context, order *types.Order) error {
 	orderJSON, err := json.Marshal(order)
 	if err != nil {
 		return err

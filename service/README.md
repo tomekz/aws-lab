@@ -23,6 +23,14 @@ start the service:
 make run
 ```
 
+REST API is available at http://localhost:3000/
+
+To place an order:
+```
+curl --location --request POST 'http://localhost:3000/order' \
+  --header "Content-Type: application/json" \
+  --data @data/order.json
+```
 
 ## Testing kafka with kafkacat
 
