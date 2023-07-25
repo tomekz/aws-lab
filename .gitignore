@@ -4,6 +4,7 @@
 terraform.plan
 .bash_history
 tfenv
+go
 .aws
 .cache/
 .local/

@@ -8,7 +8,7 @@ on:
       tfpath:
         description: 'terraform source dir'
         required: false
-        default: 'lab-kafka/terraform'
+        default: 'terraform'
       destroy:
         description: 'When TRUE the destroy will be fired instead of apply'
         type: boolean
@@ -66,14 +66,14 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: env_file
-        path: ${{ github.workspace }}/lab-kafka/ansible-playbooks/.env
+        path: ${{ github.workspace }}/ansible-playbooks/.env
 
     - name: Upload inventory file
       if: ${{ inputs.tfpath && inputs.destroy != true }}
       uses: actions/upload-artifact@v3
       with:
         name: ansible_inventory_file
-        path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory/inventory.ini
+        path: ${{ github.workspace }}/ansible-aws-inventory/inventory.ini
 
     - name: Terraform Destroy
       if: ${{ inputs.tfpath && inputs.destroy }}
@@ -94,28 +94,28 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: env_file
-          path: ${{ github.workspace }}/lab-kafka/ansible-playbooks
+          path: ${{ github.workspace }}/ansible-playbooks
             
       - name: Download inventory file
         uses: actions/download-artifact@v3
         with:
           name: ansible_inventory_file
-          path: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
+          path: ${{ github.workspace }}/ansible-aws-inventory
 
       - name: See env file
         run: |
           unzip -o env_file | cat .env
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-playbooks
+        working-directory: ${{ github.workspace }}/ansible-playbooks
 
       - name: See inventory
         run: |
           unzip -o ansible_inventory_file | cat inventory.ini
-        working-directory: ${{ github.workspace }}/lab-kafka/ansible-aws-inventory
+        working-directory: ${{ github.workspace }}/ansible-aws-inventory
 
       - name: Extract bastion_host IP address
         id: extract_bastion_ip
         run: |
-          bastion_ip=$(grep 'bastion_host ansible_host=' lab-kafka/ansible-aws-inventory/inventory.ini | awk -F '=' '{print $2}')
+          bastion_ip=$(grep 'bastion_host ansible_host=' ansible-aws-inventory/inventory.ini | awk -F '=' '{print $2}')
           echo "Bastion Host IP: $bastion_ip"
           echo "::set-output name=bastion_ip::$bastion_ip"
 
@@ -140,5 +140,3 @@ jobs:
           ansible-playbook ansible-playbooks/kafka-setup.yml --extra-vars "node_number=2"
           ansible-playbook ansible-playbooks/kafka-setup.yml --extra-vars "node_number=3"
           ansible-playbook ansible-playbooks/cloudwatch_logs_setup.yml
-
-        working-directory: ${{ github.workspace }}/lab-kafka
