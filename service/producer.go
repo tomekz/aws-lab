@@ -16,25 +16,12 @@ var orderProducer *OrderProducer
 // Create new kafka producer  
 func NewProducer() *kafka.Producer {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
+		"bootstrap.servers":   os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
+		"go.delivery.reports": true,
 	})
 	if err != nil {
 		log.Fatalf("Failed to create producer: %s\n", err)
 	}
-
-	// Delivery report handler for produced messages
-	go func() {
-		for e := range p.Events() {
-			switch ev := e.(type) {
-			case *kafka.Message:
-				if ev.TopicPartition.Error != nil {
-					fmt.Printf("Delivery failed: %v\n", ev.TopicPartition)
-				} else {
-					fmt.Printf("Delivered message to %v\n", ev.TopicPartition)
-				}
-			}
-		}
-	}()
 
 	fmt.Printf("Producer created %v\n", p)
 
@@ -52,27 +39,30 @@ func (p *OrderProducer) Produce(ctx context.Context, order *Order) error {
 		return err
 	}
 
-	//nolint:golint,errcheck
-	p.producer.Produce(&kafka.Message{
+	deliveryChan := make(chan kafka.Event)
+
+	err = p.producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &p.topic, Partition: kafka.PartitionAny},
 		Value:          orderJSON,
-	}, nil)
+	}, deliveryChan)
 
-	// TODO: handle erros and context cancellation
-	// select {
-	// case ev := <-p.producer.Events():
-	// 	switch e := ev.(type) {
-	// 	case *kafka.Message:
-	// 		if e.TopicPartition.Error != nil {
-	// 			fmt.Printf("Delivery failed: %v\n", e.TopicPartition)
-	// 			return e.TopicPartition.Error
-	// 		} else {
-	// 			fmt.Printf("Delivered message to %v\n", e.TopicPartition)
-	// 		}
-	// 	}
-	// case <-ctx.Done():
-	// 	fmt.Println("Context done")
-	// }
+	if err != nil {
+		return err
+	}
+
+	select {
+	case <-ctx.Done():
+		fmt.Printf("Delivery failed: %v\n", ctx.Err())
+	case e := <-deliveryChan:
+		m := e.(*kafka.Message)
+
+		if m.TopicPartition.Error != nil {
+			fmt.Printf("Delivery failed: %v\n", m.TopicPartition.Error)
+			return m.TopicPartition.Error
+		} else {
+			fmt.Printf("Delivered message to %v\n", m.TopicPartition)
+		}
+	}
 
 	return nil
 }

@@ -75,13 +75,13 @@ func (s *JSONAPIServer) Run() {
 }
 
 func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	//nolint:staticcheck
-	ctx = context.WithValue(ctx, "requestID", rand.Intn(10000000))
-	// defer cancel()
-
-	//nolint:errcheck,staticcheck
 	return func(w http.ResponseWriter, r *http.Request) {
+		//nolint:errcheck,staticcheck
+		ctx, _ := context.WithTimeout(r.Context(), 5*time.Second)
+
+		//nolint:staticcheck
+		ctx = context.WithValue(ctx, "requestID", rand.Intn(10000000))
+		// defer cancel()
 		if err := apiFn(ctx, w, r); err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]any{"error": err.Error()})
 		}
