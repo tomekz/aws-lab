@@ -6,20 +6,17 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"service/types"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
+// global order producer to be used by main.go
+var orderProducer *OrderProducer
+
 // Create new kafka producer  
 func NewProducer() *kafka.Producer {
-	bootstrapServers, ok := os.LookupEnv("KAFKA_BOOTSTRAP_SERVERS")
-	if !ok {
-		bootstrapServers = "localhost:9093"
-	}
-
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": bootstrapServers,
+		"bootstrap.servers": os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
 	})
 	if err != nil {
 		log.Fatalf("Failed to create producer: %s\n", err)
@@ -49,7 +46,7 @@ type OrderProducer struct {
 	topic    string
 }
 
-func (p *OrderProducer) Produce(ctx context.Context, order *types.Order) error {
+func (p *OrderProducer) Produce(ctx context.Context, order *Order) error {
 	orderJSON, err := json.Marshal(order)
 	if err != nil {
 		return err
@@ -61,26 +58,21 @@ func (p *OrderProducer) Produce(ctx context.Context, order *types.Order) error {
 		Value:          orderJSON,
 	}, nil)
 
-	select {
-	case ev := <-p.producer.Events():
-		switch e := ev.(type) {
-		case *kafka.Message:
-			if e.TopicPartition.Error != nil {
-				fmt.Printf("Delivery failed: %v\n", e.TopicPartition)
-				return e.TopicPartition.Error
-			} else {
-				fmt.Printf("Delivered message to %v\n", e.TopicPartition)
-			}
-		}
-	case <-ctx.Done():
-		fmt.Println("Context done")
-	}
+	// TODO: handle erros and context cancellation
+	// select {
+	// case ev := <-p.producer.Events():
+	// 	switch e := ev.(type) {
+	// 	case *kafka.Message:
+	// 		if e.TopicPartition.Error != nil {
+	// 			fmt.Printf("Delivery failed: %v\n", e.TopicPartition)
+	// 			return e.TopicPartition.Error
+	// 		} else {
+	// 			fmt.Printf("Delivered message to %v\n", e.TopicPartition)
+	// 		}
+	// 	}
+	// case <-ctx.Done():
+	// 	fmt.Println("Context done")
+	// }
 
 	return nil
-}
-
-// OrderProducer  
-var OProducer = &OrderProducer{
-	producer: NewProducer(),
-	topic:    "orders",
 }

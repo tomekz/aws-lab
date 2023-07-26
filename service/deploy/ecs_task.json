@@ -28,6 +28,14 @@
         {
           "name": "KAFKA_BOOTSTRAP_SERVERS",
           "value": "10.0.2.116:9092,10.0.2.84:9092,10.0.2.185:9092"
+        },
+        {
+          "name": "KAFKA_TOPIC",
+          "value": "orders"
+        },
+        {
+          "name": "HTTP_SERVER_LISTEN_ADDRESS",
+          "value": ":3000"
         }
       ]
     }

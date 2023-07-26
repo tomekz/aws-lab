@@ -11,26 +11,38 @@ import (
 	"os/signal"
 	"time"
 
-	"service/types"
-
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
+
+type HelloResponse struct {
+	Name     string `json:"name"`
+	Greeting string `json:"greeting"`
+}
+
+type PlaceOrderResponse struct {
+	OrderID string `json:"order_id"`
+}
+
+type Order struct {
+	OrderID    string `json:"order_id"`
+	CustomerID string `json:"customer_id"`
+	Total      int    `json:"total"`
+}
 
 // APIFunc is a custom type for http handler function that supports context param and returns error
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
 type JSONAPIServer struct {
-	listenAddr string
-	svc        HelloService
+	svc        OrderPlacer
 	httpServer *http.Server
 }
 
-func NewJSONAPIServer(listenAddr string, svc HelloService) *JSONAPIServer {
+func NewJSONAPIServer(svc OrderPlacer) *JSONAPIServer {
 	return &JSONAPIServer{
-		listenAddr: listenAddr,
-		svc:        svc,
+		svc: svc,
 		httpServer: &http.Server{
-			Addr:         listenAddr,
+			Addr:         os.Getenv("HTTP_SERVER_LISTEN_ADDRESS"),
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 5 * time.Second,
 		},
@@ -41,8 +53,7 @@ func (s *JSONAPIServer) Run() {
 	rMux := mux.NewRouter()
 	rMux.NotFoundHandler = http.HandlerFunc(DefaultHandler)
 
-	// mux := http.NewServeMux()
-	rMux.HandleFunc("/hello", makeHTTPHandlerFunc(s.handleHello))
+	// rMux.HandleFunc("/hello", makeHTTPHandlerFunc(s.handleHello))
 
 	postMux := rMux.Methods(http.MethodPost).Subrouter()
 	postMux.HandleFunc("/order", makeHTTPHandlerFunc(s.placeOrder))
@@ -50,7 +61,7 @@ func (s *JSONAPIServer) Run() {
 	s.httpServer.Handler = rMux
 
 	go func() {
-		log.Println("Server is running on", s.listenAddr)
+		log.Println("Server is running on", os.Getenv("HTTP_SERVER_LISTEN_ADDRESS"))
 		if err := s.httpServer.ListenAndServe(); err != nil {
 			log.Fatalf("failed to listen and serve: %v", err)
 		}
@@ -65,10 +76,12 @@ func (s *JSONAPIServer) Run() {
 }
 
 func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	//nolint:staticcheck
 	ctx = context.WithValue(ctx, "requestID", rand.Intn(10000000))
-	defer cancel()
+	// defer cancel()
 
+	//nolint:errcheck,staticcheck
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := apiFn(ctx, w, r); err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]any{"error": err.Error()})
@@ -84,34 +97,19 @@ func DefaultHandler(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (s *JSONAPIServer) placeOrder(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	order := types.Order{}
-	if err := json.NewDecoder(r.Body).Decode(&order); err != nil {
+	order := &Order{}
+	if err := json.NewDecoder(r.Body).Decode(order); err != nil {
 		return err
 	}
 
 	err := s.svc.PlaceOrder(ctx, order)
 	if err != nil {
-		return err
+		fmt.Println("Error placing order:", err)
+		return writeJSON(w, http.StatusInternalServerError, map[string]any{"error": err.Error()})
 	}
 
-	priceResp := types.PlaceOrderResponse{
-		Status: "OK", // TODO: add more meaningful status
-	}
-
-	return writeJSON(w, http.StatusOK, &priceResp)
-}
-
-func (s *JSONAPIServer) handleHello(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	name := r.URL.Query().Get("name")
-
-	greeting, err := s.svc.Hello(ctx, name)
-	if err != nil {
-		return err
-	}
-
-	priceResp := types.HelloResponse{
-		Name:     name,
-		Greeting: greeting,
+	priceResp := PlaceOrderResponse{
+		OrderID: uuid.New().String(),
 	}
 
 	return writeJSON(w, http.StatusOK, &priceResp)

@@ -1,14 +1,26 @@
 package main
 
-import "flag"
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 func main() {
-	listenAddr := flag.String("listenaddr", ":3000", "listen address the service is running")
-	flag.Parse()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	svc := NewLoggingService(NewMetricsService(&helloService{}))
+	orderProducer = &OrderProducer{
+		producer: NewProducer(),
+		topic:    os.Getenv("KAFKA_TOPIC"),
+	}
+	defer orderProducer.producer.Close()
 
-	defer OProducer.producer.Close()
-	server := NewJSONAPIServer(*listenAddr, svc)
+	svc := NewLoggingService(NewMetricsService(&orderPlacerService{}))
+
+	server := NewJSONAPIServer(svc)
 	server.Run()
 }

@@ -3,26 +3,17 @@ package main
 import (
 	"context"
 	"fmt"
-
-	"service/types"
 )
 
 type metricsService struct {
-	next HelloService
+	next OrderPlacer
 }
 
-func NewMetricsService(next HelloService) HelloService {
+func NewMetricsService(next OrderPlacer) OrderPlacer {
 	return &metricsService{next}
 }
 
-func (s *metricsService) Hello(ctx context.Context, name string) (greeting string, err error) {
-	// your metrics storage. E.g.push to prometheus (gauge, counters)
-	fmt.Println("pushing metrics to prometheus")
-
-	return s.next.Hello(ctx, name)
-}
-
-func (s *metricsService) PlaceOrder(ctx context.Context, order types.Order) (err error) {
+func (s *metricsService) PlaceOrder(ctx context.Context, order *Order) (err error) {
 	// your metrics storage. E.g.push to prometheus (gauge, counters)
 	fmt.Println("pushing metrics to prometheus")
 

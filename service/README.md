@@ -4,6 +4,12 @@ A microservice for placing orders on crypto exchanges.
 - orders are received by the service and sent to a Kafka topic
 
 ## Start the application
+provide evnironment variables in .env file
+
+```
+cp .env.example .env
+```
+
 start kafka and zookeeper using docker-compose
 
 to start just single kafka broker 
