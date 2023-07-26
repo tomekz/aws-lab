@@ -15,11 +15,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type HelloResponse struct {
-	Name     string `json:"name"`
-	Greeting string `json:"greeting"`
-}
-
 type PlaceOrderResponse struct {
 	OrderID string `json:"order_id"`
 }
@@ -53,7 +48,11 @@ func (s *JSONAPIServer) Run() {
 	rMux := mux.NewRouter()
 	rMux.NotFoundHandler = http.HandlerFunc(DefaultHandler)
 
-	// rMux.HandleFunc("/hello", makeHTTPHandlerFunc(s.handleHello))
+	rMux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Health check: OK")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Health check: OK")
+	})
 
 	postMux := rMux.Methods(http.MethodPost).Subrouter()
 	postMux.HandleFunc("/order", makeHTTPHandlerFunc(s.placeOrder))

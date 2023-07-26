@@ -6,7 +6,7 @@
   "executionRoleArn": "arn:aws:iam::925303156481:role/lab-kafka-ecs-service-execution-task-role",
   "containerDefinitions": [
     {
-      "name": "hello-service",
+      "name": "order-placer-service",
       "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:v0.0.1",
       "portMappings": [
         {
@@ -21,7 +21,7 @@
         "options": {
           "awslogs-group": "lab-kafka-ecs-service-logs",
           "awslogs-region": "eu-central-1",
-          "awslogs-stream-prefix": "hello-service"
+          "awslogs-stream-prefix": "order-placer-service"
         }
       },
       "environment": [

@@ -61,7 +61,7 @@ resource "aws_ecs_service" "lab-kafka-ecs-service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = "hello-service"
+    container_name   = "order-placer-service"
     container_port   = 3000
   }
 }
@@ -77,7 +77,7 @@ resource "aws_ecs_task_definition" "lab_kafka_service_task_definition" {
   container_definitions    = <<TASK_DEF
   [
     {
-    "name": "hello-service", 
+    "name": "order-placer-service", 
     "image": "925303156481.dkr.ecr.eu-central-1.amazonaws.com/lab-kafka-ecr:v0.0.1", 
     "portMappings": [
         {

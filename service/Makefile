@@ -1,5 +1,5 @@
 build:
-	go build -o bin/helloservice
+	go build -o bin/service
 
 run: build
-	./bin/helloservice
+	./bin/service

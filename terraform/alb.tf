@@ -11,11 +11,10 @@ resource "aws_security_group" "load_balancer_security_group" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port        = 3000
-    to_port          = 3000
+    from_port        = 80
+    to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
   }
 
   egress {
@@ -23,25 +22,24 @@ resource "aws_security_group" "load_balancer_security_group" {
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
   }
   tags = merge(local.tags, { "Name" = "lab-kafka-alb-sg" })
 }
 
 resource "aws_lb_target_group" "target_group" {
   name        = "lab-kafka-alb-tg"
-  port        = 3000
+  port        = 80
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.main.id
 
   health_check {
+    path                = "/health"
     healthy_threshold   = "3"
-    interval            = "300"
+    interval            = "60"
     protocol            = "HTTP"
-    matcher             = "200"
+    matcher             = "200-399"
     timeout             = "3"
-    path                = "/"
     unhealthy_threshold = "2"
   }
 
@@ -50,7 +48,7 @@ resource "aws_lb_target_group" "target_group" {
 
 resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_alb.application_load_balancer.id
-  port              = "3000"
+  port              = "80"
   protocol          = "HTTP"
 
   default_action {
