@@ -13,6 +13,17 @@ import (
 // global order producer to be used by main.go
 var orderProducer *OrderProducer
 
+func NewOrderProducer() *OrderProducer {
+	if orderProducer == nil {
+		orderProducer = &OrderProducer{
+			producer: NewProducer(),
+			topic:    os.Getenv("KAFKA_TOPIC"),
+		}
+	}
+
+	return orderProducer
+}
+
 // Create new kafka producer  
 func NewProducer() *kafka.Producer {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{

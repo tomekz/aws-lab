@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -13,11 +12,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	orderProducer = &OrderProducer{
-		producer: NewProducer(),
-		topic:    os.Getenv("KAFKA_TOPIC"),
-	}
-	defer orderProducer.producer.Close()
+	producer := NewOrderProducer()
+	defer producer.producer.Close()
 
 	svc := NewLoggingService(NewMetricsService(&orderPlacerService{}))
 
