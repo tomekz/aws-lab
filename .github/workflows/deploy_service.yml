@@ -10,7 +10,7 @@ env:
   ECS_SERVICE: lab-kafka-ecs-service
   ECS_CLUSTER: lab-kafka-ecs-cluster
   ECS_TASK_DEFINITION: service/deploy/ecs_task.json
-  CONTAINER_NAME: hello-service
+  CONTAINER_NAME: order-placer-service
 
 jobs:
 
