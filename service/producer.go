@@ -24,7 +24,7 @@ func NewOrderProducer() *OrderProducer {
 	return orderProducer
 }
 
-// Create new kafka producer  
+// Create new kafka producer 
 func NewProducer() *kafka.Producer {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers":   os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
