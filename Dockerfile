@@ -29,4 +29,9 @@ RUN wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz && \
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 
+# install eksctl
+RUN curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_arm64.tar.gz" && \
+    tar -xzf eksctl_Linux_arm64.tar.gz -C /tmp && rm eksctl_Linux_arm64.tar.gz && \
+    sudo mv /tmp/eksctl /usr/local/bin
+
 USER app
