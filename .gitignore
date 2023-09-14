@@ -12,7 +12,7 @@ go
 .wget-hsts
 .ansible
 .bashrc
-
+.kube
 .lesshst
 .ssh
 .env

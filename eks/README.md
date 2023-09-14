@@ -36,7 +36,5 @@ eksctl utils describe-addon-versions \
 # Destroying the cluster #
 ##########################
 
-eksctl delete cluster \
-    --config-file cluster-1.18.yaml \
-    --wait
+eksctl delete cluster  --config-file eks/cluster.yaml  --wait
 ```
