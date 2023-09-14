@@ -10,7 +10,12 @@ on:
         required: false
         default: 'terraform'
       destroy:
-        description: 'When TRUE the destroy will be fired instead of apply'
+        description: 'Enable to run terraform destroy'
+        type: boolean
+        required: true
+        default: false
+      ansible:
+        description: 'Enable to run ansible playbooks on the provisioned EC2 instances'
         type: boolean
         required: true
         default: false
@@ -84,7 +89,7 @@ jobs:
 
   ansible:
     runs-on: ubuntu-latest
-    if: ${{ inputs.destroy != true }}
+    if: ${{ inputs.ansible == true && inputs.destroy != true }}
     needs: terraform
     steps:
       - name: Checkout repository
