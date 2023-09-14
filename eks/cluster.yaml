@@ -1,0 +1,12 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: lab
+  region: eu-central-1
+  version: "1.27"
+managedNodeGroups:
+- name: primary-1-18
+  instanceType: t2.small
+  minSize: 3
+  maxSize: 6
+  spot: true

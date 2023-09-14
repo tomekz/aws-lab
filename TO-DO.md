@@ -1,5 +1,0 @@
-- [ ] add https://eksctl.io/ to dev container
-- [ ] automate:
-    - [ ] create new eks cluster using eksctl
-    - [ ] deploy argocd to eks cluster 
-    - [ ] configure argo to deploy services from this repo
