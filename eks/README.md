@@ -1,4 +1,4 @@
-## TODO
+# TODO
 - [X] add https://eksctl.io/ to dev container
 - [.] automate:
     - [X] create and destroy new eks cluster using eksctl
@@ -6,6 +6,7 @@
     - [ ] configure argo to deploy services from this repo
 
 
+## eksctl
 
 ```bash
 ######################
@@ -38,3 +39,5 @@ eksctl utils describe-addon-versions \
 
 eksctl delete cluster  --config-file eks/cluster.yaml  --wait
 ```
+
+## argo
