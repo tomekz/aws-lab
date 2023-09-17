@@ -13,7 +13,7 @@
 # Creating a cluster #
 ######################
 
-eksctl create cluster \ --config-file eks/cluster.yaml 
+eksctl create cluster  --config-file eks/cluster.yaml 
 
 
 ##########################

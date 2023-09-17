@@ -1,11 +1,11 @@
 #!/bin/bash
 
 cluster-create() {
-    echo "Hello, world!"
+    eksctl create cluster  --config-file cluster.yaml 
 }
 
 cluster-delete() {
-    echo "Goodbye, world!"
+    eksctl delete cluster  --config-file cluster.yaml  --wait
 }
 
 if [ "$1" == "cluster-create" ]; then
