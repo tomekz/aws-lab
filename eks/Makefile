@@ -7,5 +7,8 @@ help:
 cluster-create: # create the EKS cluster
 	./make.sh cluster-create
 
+write-kubeconfig: # write the kubeconfig file
+	./make.sh write-kubeconfig
+
 cluster-delete: # delete the EKS cluster
 	./make.sh cluster-delete
