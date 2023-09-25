@@ -7,6 +7,9 @@ metadata:
 managedNodeGroups:
 - name: primary-1-18
   instanceType: t2.small
-  minSize: 3
-  maxSize: 6
+  iam:
+    withAddonPolicies:
+      albIngress: true
+  minSize: 1
+  maxSize: 3
   spot: true

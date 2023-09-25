@@ -5,3 +5,6 @@ services:
     volumes:
       - ./:/home/app
     command: ["tail", "-f", "/dev/null"]
+    ports:
+      - 8080:8080
+

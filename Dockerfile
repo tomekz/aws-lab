@@ -42,5 +42,6 @@ RUN sudo apt-get update && \
     sudo apt-get update && \
     sudo apt-get install -y kubectl
 
+RUN mkdir /home/app/scans && chmod 777 /home/app/scans
 
 USER app
