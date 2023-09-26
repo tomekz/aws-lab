@@ -32,6 +32,31 @@ or use eksctl
  eksctl create iamidentitymapping --cluster lab --region=eu-central-1 --arn arn:aws:iam::[account_id]:user/terraform_user --group system:masters --username admin
 
 ```
+```
+ eksctl create iamidentitymapping --cluster lab --region=eu-central-1 --arn arn:aws:iam::[account_id]:user --group system:masters --username admin
+
+```
+3. deploy k8s dashboard
+
+```
+export DASHBOARD_VERSION="v2.6.0"
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/${DASHBOARD_VERSION}/aio/deploy/recommended.yaml
+
+```
+
+run proxy
+```
+kubectl proxy --port=8080 --address=0.0.0.0 --disable-filter=true &
+
+```
+get token
+```
+aws eks get-token --cluster-name lab | jq -r '.status.token'
+
+```
+
+- http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 
 ##########################
 # Exploring the outcomes #
