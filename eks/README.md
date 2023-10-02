@@ -19,10 +19,24 @@ kubectl edit configmap aws-auth -n kube-system
 ```
 Then go down to mapUsers and add the following (replace [account_id] with your Account ID)
 ```
-mapUsers: |
-  - userarn: arn:aws:iam::[account_id]:root
-    groups:
-    - system:masters
+apiVersion: v1
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::[account_id]:role/eksctl-lab-nodegroup-primary-1-18-NodeInstanceRole-1X19WXO7U3UM9
+      username: system:node:{{EC2PrivateDNSName}}
+  mapUsers: |
+    - groups:
+      - system:masters
+      userarn: arn:aws:iam::[account_id]:user/terraform_user
+      username: admin
+    - groups:
+      - system:masters
+      userarn: arn:aws:iam::[account_id]:root
+      username: admin
+kind: ConfigMap
 ```
 
 or use eksctl
@@ -54,6 +68,21 @@ get token
 ```
 aws eks get-token --cluster-name lab | jq -r '.status.token'
 
+```
+
+4. install argo
+
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+5. install argo cli
+
+```
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+rm argocd-linux-amd64
 ```
 
 - http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
