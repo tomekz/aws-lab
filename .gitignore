@@ -16,3 +16,4 @@ go
 .lesshst
 .ssh
 .env
+.config

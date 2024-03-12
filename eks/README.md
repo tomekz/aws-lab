@@ -3,6 +3,7 @@
 - [.] automate:
     - [X] create and destroy new eks cluster using eksctl
     - [ ] deploy argocd to eks cluster (see the eks workshop https://www.eksworkshop.com/docs/automation/gitops/)
+    - [ ] deploy istio to eks cluster
     - [ ] configure argo to deploy services from this repo
 
 
@@ -86,6 +87,10 @@ rm argocd-linux-amd64
 ```
 
 - http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
+
+6. install istio
+
+TBD
 
 ##########################
 # Exploring the outcomes #
