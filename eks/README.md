@@ -4,7 +4,15 @@
     - [X] create and destroy new eks cluster using eksctl
     - [ ] deploy argocd to eks cluster (see the eks workshop https://www.eksworkshop.com/docs/automation/gitops/)
     - [ ] deploy istio to eks cluster
-    - [ ] configure argo to deploy services from this repo
+        - [ ] use [cloud-init](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) module to run user scripts on EC2 instance
+        - [ ] pass the `yaml.tpl` files to the cloud-init module using terraform `templatefile` function like this: __
+        ```terraform
+        locals {
+              cloud_init = base64encode(templatefile("${path.module}/user-data/cloud_init.yml.tpl", { istio_values_yml = local.istio_values_yml, helmfile = local.helmfile, rootca_pkey = local.rootca_pkey, rootca = local.rootca, intca_pkey = local.intca_pkey, intca = local.intca }))
+        }
+        ```
+        - [ ] install Utilities, Preparing the Intermediate Certificate Authority
+        - [ ] deploy istio
 
 
 ## eksctl
