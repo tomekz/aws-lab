@@ -4,12 +4,11 @@ ifndef ENVIRONMENT
 override ENVIRONMENT = dev
 endif
 ENV?=$(ENVIRONMENT)
-STATE_BUCKET?=eks--state
 
 init: clean
 	tfenv install
 	tfenv use
-	terraform init -reconfigure -backend-config='bucket=$(STATE_BUCKET)' -var-file=envs/$(ENV).tfvars
+	terraform init -reconfigure -var-file=envs/$(ENV).tfvars
 
 plan:
 	terraform plan -out terraform.plan -var-file=envs/$(ENV).tfvars

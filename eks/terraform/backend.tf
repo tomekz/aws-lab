@@ -1,6 +1,5 @@
 terraform {
-  backend "s3" {
-    key    = "terraform.tfstate"
-    region = "eu-central-1"
+  backend "local" {
+    path = "state.tfstate"
   }
 }
