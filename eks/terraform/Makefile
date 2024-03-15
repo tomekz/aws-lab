@@ -8,7 +8,7 @@ ENV?=$(ENVIRONMENT)
 init: clean
 	tfenv install
 	tfenv use
-	terraform init -reconfigure -var-file=envs/$(ENV).tfvars
+	terraform init -upgrade -reconfigure -var-file=envs/$(ENV).tfvars
 
 plan:
 	terraform plan -out terraform.plan -var-file=envs/$(ENV).tfvars
