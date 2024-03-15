@@ -6,8 +6,8 @@ module "vpc" {
   cidr = var.vpc_cidr
 
   azs = [
-    "eu-west-1a",
-    "eu-west-1b",
+    "eu-central-1a",
+    "eu-central-1b",
   ]
 
   private_subnets = [
@@ -39,9 +39,9 @@ module "vpc" {
   one_nat_gateway_per_az        = false
 
   private_subnet_tags = merge({
-    SubnetType                                  = "private"
-    "kubernetes.io/role/internal-alb"           = "1"
-  }, local.cluster_subnet_tags
+    SubnetType                        = "private"
+    "kubernetes.io/role/internal-alb" = "1"
+    }, local.cluster_subnet_tags
   )
 
   private_route_table_tags = {
