@@ -1,3 +1,3 @@
 output "ec2_instance_role_arn" {
-  value = module.iam.arn
+  value = aws_iam_role.this.arn
 }
