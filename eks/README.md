@@ -1,21 +1,11 @@
-# TODO
-- [X] add https://eksctl.io/ to dev container
-- [.] automate:
-    - [X] create and destroy new eks cluster using eksctl
-    - [ ] deploy argocd to eks cluster (see the eks workshop https://www.eksworkshop.com/docs/automation/gitops/)
-    - [ ] deploy istio to eks cluster
-        - [ ] use [cloud-init](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) module to run user scripts on EC2 instance
-        - [ ] pass the `yaml.tpl` files to the cloud-init module using terraform `templatefile` function like this: __
-        ```terraform
-        locals {
-              cloud_init = base64encode(templatefile("${path.module}/user-data/cloud_init.yml.tpl", { istio_values_yml = local.istio_values_yml, helmfile = local.helmfile, rootca_pkey = local.rootca_pkey, rootca = local.rootca, intca_pkey = local.intca_pkey, intca = local.intca }))
-        }
-        ```
-        - [ ] install Utilities, Preparing the Intermediate Certificate Authority
-        - [ ] deploy istio
 
+# eks
 
-## eksctl
+The goal of this mini lab is to deploy a sandbox EKS cluster. It explores two provisioning strategies:
+- using `eksctl` cli
+- using terraform
+
+## provision using eksctl
 
 ######################
 # Creating a cluster #
@@ -79,27 +69,6 @@ aws eks get-token --cluster-name lab | jq -r '.status.token'
 
 ```
 
-4. install argo
-
-```
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-```
-
-5. install argo cli
-
-```
-curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
-rm argocd-linux-amd64
-```
-
-- http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
-
-6. install istio
-
-TBD
-
 ##########################
 # Exploring the outcomes #
 ##########################
@@ -124,4 +93,21 @@ eksctl utils describe-addon-versions \
 eksctl delete cluster  --config-file eks/cluster.yaml  --wait
 ```
 
-## argo
+# TODO
+- [X] add https://eksctl.io/ to dev container
+- [.] automate:
+    - [X] create and destroy new eks cluster using eksctl
+    - [ ] create and destroy new eks cluster using aws
+    - [ ] deploy argocd to eks cluster (see the eks workshop https://www.eksworkshop.com/docs/automation/gitops/)
+    - [ ] deploy istio to eks cluster
+        - [ ] use [cloud-init](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) module to run user scripts on EC2 instance
+        - [ ] pass the `yaml.tpl` files to the cloud-init module using terraform `templatefile` function like this: __
+        ```terraform
+        locals {
+              cloud_init = base64encode(templatefile("${path.module}/user-data/cloud_init.yml.tpl", { istio_values_yml = local.istio_values_yml, helmfile = local.helmfile, rootca_pkey = local.rootca_pkey, rootca = local.rootca, intca_pkey = local.intca_pkey, intca = local.intca }))
+        }
+        ```
+        - [ ] install Utilities, Preparing the Intermediate Certificate Authority
+        - [ ] deploy istio
+
+## provision using terraform
