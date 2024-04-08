@@ -29,10 +29,13 @@ locals {
   #   irsa_iam_permissions_boundary  = ""
   # }
 
+  domain_name            = "sanguo.cn"
+  alternate_domain_names = ["sangoku.jp"]
+
   #ec2
   hello        = "test msg"
   jumpbox_name = "lab-eks-jumpbox"
-  cloud_init   = base64encode(templatefile("${path.module}/user-data/cloud_init.yaml.tpl", { hello = local.hello }))
+  # cloud_init   = base64encode(templatefile("${path.module}/user-data/cloud_init.yaml.tpl", { hello = local.hello }))
 
 
   #vpc
@@ -47,5 +50,20 @@ locals {
     }
   }
 
+  istio_version = "1.20.3"
 
+  # PKI files
+  rootca_pkey = base64encode(file("${path.module}/rootca/root-cert-key.pem"))
+  rootca      = base64encode(file("${path.module}/rootca/root-cert.pem"))
+  intca_pkey  = base64encode(module.intca.private_key_pem)
+  intca       = base64encode(module.intca.ca_cert_pem)
+
+  # Istio configuration files
+  istio_values_yml = { for k, v in local.clusters : k => base64encode(templatefile("${path.module}/user-data/values.yml.tpl", { mesh_id = v.mesh_id, cluster_name = k, vpc_name = local.vpc_name, trust_domain = v.trust_domain })) }
+  helmfile         = base64encode(templatefile("${path.module}/user-data/helmfile.yaml.tpl", { istio_version = local.istio_version, clusters = keys(local.clusters), region = data.aws_region.current.name, account = data.aws_caller_identity.current.account_id }))
+
+  # Cloud init base64-encoded files & scripts
+  #bootstrap = base64encode(templatefile("${path.module}/user-data/bootstrap.sh.tpl", { clusters = join(" ", keys(local.clusters)), istio_version = local.istio_version }))
+  #cloud_init = base64encode(templatefile("${path.module}/user-data/cloud_init.yml.tpl", { bootstrap_sh = local.bootstrap, istio_values_yml = local.istio_values_yml, helmfile = local.helmfile, rootca_pkey = local.rootca_pkey, rootca = local.rootca, intca_pkey = local.intca_pkey, intca = local.intca }))
+  cloud_init = base64encode(templatefile("${path.module}/user-data/cloud_init.yml.tpl", { istio_values_yml = local.istio_values_yml, helmfile = local.helmfile, rootca_pkey = local.rootca_pkey, rootca = local.rootca, intca_pkey = local.intca_pkey, intca = local.intca }))
 }

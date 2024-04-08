@@ -1,3 +1,7 @@
+data "aws_caller_identity" "current" {}
+
+data "aws_region" "current" {}
+
 data "aws_ami" "this" {
   most_recent = true
 

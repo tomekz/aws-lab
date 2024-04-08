@@ -111,3 +111,46 @@ eksctl delete cluster  --config-file eks/cluster.yaml  --wait
         - [ ] deploy istio
 
 ## provision using terraform
+
+
+```shell
+# Obtain the ID of the jumpbox instance
+# JUMPBOX_NAME should be the name of your jumpbox instance
+INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$JUMPBOX_NAME" --query "Reservations[*].Instances[*].InstanceId" --output text)
+
+# Obtain a running shell to the remote jumpbox via AWS SSM
+aws ssm start-session --target $INSTANCE_ID --region eu-west-1
+```
+
+### Istalling Utilities, Preparing the Intermediate Certificate Authority
+
+```shell
+sudo -i
+
+cd /home/ssm-user
+
+export CLUSTERS='${CLUSTERS}'
+export AWS_REGION='eu-west-1'
+
+chown -R ssm-user:ssm-user /home/ssm-user
+
+chmod +x scripts/*.sh
+
+scripts/bootstrap.sh $CLUSTERS
+```
+
+Upon successful execution of the script, the ssm-user home directory should look similar to this (you should have the ca-cert, key and a cert-chain for your cluster):
+
+### Deploying Istio
+
+Execute the following script (still within the jumpbox in a root shell session):
+
+```shell
+scripts/istio_deploy.sh $CLUSTER
+```
+
+Congratulations, you should have an Istio control plane. To verify run the following command:
+
+```shell
+kubectl get pods -n istio-system
+```

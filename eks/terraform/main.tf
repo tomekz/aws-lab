@@ -19,3 +19,12 @@ module "ec2" {
   subnet_ids = module.vpc.private_subnets
   cloud_init = local.cloud_init
 }
+
+module "intca" {
+  source = "./modules/intca"
+
+  domain_name            = local.domain_name
+  alternate_domain_names = local.alternate_domain_names
+  ca_private_key         = base64decode(local.rootca_pkey)
+  ca_cert                = base64decode(local.rootca)
+}
