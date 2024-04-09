@@ -82,7 +82,7 @@ INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$JUMPBO
 INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=lab-eks-jumpbox" --query "Reservations[*].Instances[*].InstanceId" --output text)
 
 # Obtain a running shell to the remote jumpbox via AWS SSM
-aws ssm start-session --target $INSTANCE_ID --region eu-central-1
+aws ssm [start session](start-session) --target $INSTANCE_ID --region eu-central-1
 aws ssm start-session --target i-0b30b6d2ccf208b70 --region eu-central-1
 ```
 
@@ -93,10 +93,12 @@ sudo -i
 
 cd /home/ssm-user
 
-export CLUSTERS='${CLUSTERS}'
+export CLUSTERS='lab-eks'
 export AWS_REGION='eu-west-1'
 
-chown -R ssm-user:ssm-user /home/ssm-user
+mkdir -p scripts
+
+vim scripts/bootstrap.sh (and copy over the contents of the script/bootstrap.sh file)
 
 chmod +x scripts/*.sh
 

@@ -47,6 +47,7 @@ locals {
     lab-eks = {
       mesh_id      = "labk-eks-mesh"
       trust_domain = "cluster.local"
+      name         = "lab-eks"
     }
   }
 

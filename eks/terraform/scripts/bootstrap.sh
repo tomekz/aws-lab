@@ -1,11 +1,11 @@
 #!/bin/env bash
 
-# USAGE: bootstrap.sh <CLUSTERS>
+# USAGE: bootstrap.sh <CLUSTER>
 
 set -o xtrace
 
 PLATFORM=$(uname -s)_amd64
-EKS_CLUSTERS="$@"
+EKS_CLUSTER="$@"
 ISTIO_VERSION="1.20.3"
 
 # install kubectl
@@ -44,12 +44,10 @@ mv istio-$ISTIO_VERSION/bin/istioctl /usr/local/bin/istioctl
 rm -rf istio-$ISTIO_VERSION/
 
 # create and verify TLS certificate bundles
-for eks_cluster in $EKS_CLUSTERS; do
-    cat /home/ssm-user/ca-cert-$eks_cluster.pem /home/ssm-user/root-cert.pem > /home/ssm-user/cert-chain-$eks_cluster.pem
-    openssl verify -CAfile /home/ssm-user/root-cert.pem /home/ssm-user/cert-chain-$eks_cluster.pem
-    openssl x509 -in /home/ssm-user/ca-cert-$eks_cluster.pem -noout -text
-    aws eks update-kubeconfig --name $eks_cluster --region $AWS_REGION
-done
+cat /home/ssm-user/ca-cert.pem /home/ssm-user/root-cert.pem > /home/ssm-user/cert-chain.pem
+openssl verify -CAfile /home/ssm-user/root-cert.pem /home/ssm-user/cert-chain.pem
+openssl x509 -in /home/ssm-user/ca-cert.pem -noout -text
+aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 
 chown -R ssm-user:ssm-user /home/ssm-user
 
