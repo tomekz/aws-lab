@@ -1,0 +1,53 @@
+global:
+  meshID: {{ .Values.istiod.meshID }}
+
+  multiCluster:
+    enabled: {{ .Values.istiod.multiCluster.enabled }}
+    clusterName: {{ .Values.istiod.multiCluster.clusterName }}
+
+  network: {{ .Values.istiod.network }}
+
+  proxy:
+    clusterDomain: {{ .Values.istiod.trustDomain }}
+    tracer: zipkin
+
+  platform: ""
+
+pilot:
+  autoscaleEnabled: true
+  autoscaleMin: 2
+  autoscaleMax: 4
+  replicaCount: 2
+  rollingMaxSurge: 100%
+  rollingMaxUnavailable: 50%
+  traceSampling: 100.0
+  env:
+    ENABLE_NATIVE_SIDECARS: "true"
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 2048Mi
+
+  cpu:
+    targetAverageUtilization: 80
+
+  enableProtocolSniffingForOutbound: true
+  enableProtocolSniffingForInbound: true
+
+istio_cni:
+  enabled: true
+
+telemetry:
+  enabled: true
+
+meshConfig:
+  accessLogFile: /dev/stdout
+  accessLogEncoding: TEXT
+  trustDomain: {{ .Values.istiod.trustDomain }}
+  defaultConfig:
+    terminationDrainDuration: 20s
+    holdApplicationUntilProxyStarts: true
+    proxyMetadata:
+      ISTIO_META_DNS_CAPTURE: "true"
+      ISTIO_META_DNS_AUTO_ALLOCATE: "true"

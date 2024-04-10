@@ -49,6 +49,6 @@ openssl verify -CAfile /home/ssm-user/root-cert.pem /home/ssm-user/cert-chain.pe
 openssl x509 -in /home/ssm-user/ca-cert.pem -noout -text
 aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 
-chown -R ssm-user:ssm-user /home/ssm-user
+# chown -R ssm-user:ssm-user /home/ssm-user
 
 set +o xtrace

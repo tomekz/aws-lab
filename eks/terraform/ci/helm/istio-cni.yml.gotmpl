@@ -1,0 +1,14 @@
+cni:
+  repair:
+    enabled: true
+
+  ambient:
+    enabled: false
+    redirectMode: iptables
+
+  privileged: false
+
+global:
+  logging:
+    level: default:info,cni:info
+  logAsJson: true

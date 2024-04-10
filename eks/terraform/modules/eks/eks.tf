@@ -52,7 +52,7 @@ resource "aws_eks_addon" "vpc_cni" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
-  configuration_values = jsonencode({ enableNetworkPolicy = true })
+  configuration_values = jsonencode({ enableNetworkPolicy = tostring(true) })
 
   depends_on = [module.node]
 }

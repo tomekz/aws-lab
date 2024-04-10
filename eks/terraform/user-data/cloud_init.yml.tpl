@@ -26,3 +26,28 @@ write_files:
     content: ${intca}
     permissions: '0644'
 
+  - encoding: b64
+    path: /home/ssm-user/root-cert.pem
+    content: ${rootca}
+    permissions: '0644'
+
+  - encoding: b64
+    path: /home/ssm-user/root-cert-key.pem
+    content: ${rootca_pkey}
+    permissions: '0644'
+
+  - encoding: b64
+    path: /home/ssm-user/ci/helm/istio-cni.yml.gotmpl
+    content: ${istio_cni_values_yaml}
+    permissions: '0644'
+
+  - encoding: b64
+    path: /home/ssm-user/ci/helm/istiod.yml.gotmpl
+    content: ${istiod_values_yaml}
+    permissions: '0644'
+
+  - encoding: b64
+    path: /home/ssm-user/ci/helm/istio-gateway.yml.gotmpl
+    content: ${istio-gateway_values_yaml}
+    permissions: '0644'
+
