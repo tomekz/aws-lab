@@ -158,3 +158,9 @@ The pipeline is triggered manually from GitHub UI. It consists of 2 main stages:
 
 Additional pipeline `.github/workflows/deploy_service.yaml` is triggered automatically on every push to `main` branch.
 It builds docker image and pushes it to AWS ECR repository. Then it deploys the image to ECS cluster.
+
+## EKS Lab
+
+The goal of this lab is to create Istio service mesh running sample microservices on EKS cluster.
+
+[Lab](eks/README.md)

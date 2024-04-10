@@ -4,6 +4,10 @@ The goal of this mini lab is to deploy a sandbox EKS cluster. It explores two pr
 - using `eksctl` cli
 - using terraform
 
+Once the cluster is up and running, we will deploy Istio control plane together with the Istio Ingress Gateway.
+A sample [application](https://istio.io/latest/docs/examples/bookinfo/) composed of four microservices will be deployed to the cluster.
+The microservices will be exposed to the internet via the Istio Ingress Gateway.
+
 ## provision using eksctl
 
 ### Creating a cluster
