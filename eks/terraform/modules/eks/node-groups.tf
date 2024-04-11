@@ -9,7 +9,7 @@ module "node" {
   bootstrap_extra_args = "--kubelet-extra-args \"--node-labels=node.kubernetes.io/lifecycle=normal\""
 
   subnet_ids     = var.subnet_ids
-  instance_types = ["t2.small"]
+  instance_types = ["t3.medium"]
   capacity_type  = "ON_DEMAND"
   min_size       = 1
   max_size       = 3

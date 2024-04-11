@@ -86,7 +86,7 @@ INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$JUMPBO
 INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=lab-eks-jumpbox" --query "Reservations[*].Instances[*].InstanceId" --output text)
 
 # Obtain a running shell to the remote jumpbox via AWS SSM
-aws ssm [start session](start-session) --target $INSTANCE_ID --region eu-central-1
+aws ssm start-session --target $INSTANCE_ID --region eu-central-1
 aws ssm start-session --target i-0b30b6d2ccf208b70 --region eu-central-1
 ```
 
@@ -98,7 +98,7 @@ sudo -i
 cd /home/ssm-user
 
 export CLUSTERS='lab-eks'
-export AWS_REGION='eu-west-1'
+export AWS_REGION='eu-central-1'
 
 mkdir -p scripts
 
@@ -109,11 +109,14 @@ chmod +x scripts/*.sh
 scripts/bootstrap.sh $CLUSTERS
 ```
 
-Upon successful execution of the script, the ssm-user home directory should look similar to this (you should have the ca-cert, key and a cert-chain for your cluster):
-
 ### Deploying Istio
 
-Execute the following script (still within the jumpbox in a root shell session):
+```shell
+vim scripts/istio_deploy.sh 
+```
+(and copy over the contents of the script/istio_deploy.sh file)
+
+Execute the following script 
 
 ```shell
 scripts/istio_deploy.sh $CLUSTER
@@ -124,21 +127,3 @@ Congratulations, you should have an Istio control plane. To verify run the follo
 ```shell
 kubectl get pods -n istio-system
 ```
-
-
-# TODO
-- [X] add https://eksctl.io/ to dev container
-- [.] automate:
-   - [x] create and destroy new eks cluster using eksctl
-      - [x] create and destroy new eks cluster using aws
-    - [ ] deploy istio to eks cluster
-        - [ ] use [cloud-init](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) module to run user scripts on EC2 instance
-        - [ ] pass the `yaml.tpl` files to the cloud-init module using terraform `templatefile` function like this: __
-        ```terraform
-        locals {
-              cloud_init = base64encode(templatefile("${path.module}/user-data/cloud_init.yml.tpl", { istio_values_yml = local.istio_values_yml, helmfile = local.helmfile, rootca_pkey = local.rootca_pkey, rootca = local.rootca, intca_pkey = local.intca_pkey, intca = local.intca }))
-        }
-        ```
-        - [ ] install Utilities, Preparing the Intermediate Certificate Authority
-        - [ ] deploy istio
-
