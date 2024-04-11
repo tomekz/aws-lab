@@ -48,6 +48,6 @@ write_files:
 
   - encoding: b64
     path: /home/ssm-user/ci/helm/istio-gateway.yml.gotmpl
-    content: ${istio-gateway_values_yaml}
+    content: ${istio_gateway_values_yaml}
     permissions: '0644'
 

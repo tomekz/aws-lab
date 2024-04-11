@@ -40,7 +40,7 @@ locals {
 
   #vpc
   vpc_name = "lab-eks"
-  vpc_cidr = "10.205.p00.0/23"
+  vpc_cidr = "10.205.100.0/23"
 
   #eks
   clusters = {
