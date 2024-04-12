@@ -75,7 +75,8 @@ kubectl label namespace bookinfo istio-injection=enabled
 ```
 
 Now that the Bookinfo services are up and running, we need to make the application accessible from outside of your Kubernetes cluster, by creating an Istio Gateway and VirtualService.
-
+The required resource definitions are stored in the `istio` directory of this repository.
+To expose the gateway to the internet, we would need to provision AWS Network Load Balancer (NLB) and associate it with the Istio Ingress Gateway. (out of the scope of this lab)
 
 
 ## provision using eksctl
